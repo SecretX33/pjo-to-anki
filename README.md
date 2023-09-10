@@ -12,7 +12,7 @@ Esta extensão **não** é oficial do PJO, e portanto não possui nenhum víncul
 
 Para utilizar o **PJO to Anki**, siga as instruções abaixo:
 
-1. Faça o download e instale a extensão em seu navegador.
+1. Instale a extensão em seu navegador pela loja de extensões do seu navegador.
 
 2. **[Importante!]** Siga as instruções da seção de [Configuração](#Configuração) *exatamente* como descritas.
 
@@ -28,13 +28,15 @@ Pronto, agora você já consegue adicionar cartas ao Anki com um único clique!
 
 Para configurar a extensão, siga os passos abaixo.
 
-## No Anki
+## 1. No Anki
 
 Para que a extensão funcione, é necessário que você instale o addon [AnkiConnect](https://ankiweb.net/shared/info/2055492159) no seu Anki. Se você já possui esse addon no seu Anki, siga para a seção de [Configurando o AnkiConnect](#configurando-o-ankiconnect).
 
 ### Instalando o AnkiConnect
 
-1. Abra o Anki
+1. Na barra de menu do Anki, vá em "Ferramentas" > "Extensões", clique no botão "Obter extensões...", uma tela com um campo de "Código" será aberta para você.
+2. Acesse a página oficial da extensão [AnkiConnect](https://ankiweb.net/shared/info/2055492159), e copie o código da extensão como indicado no site, será uma sequência númerica tal como `2055698787`.
+3. No Anki, cole esse código no campo de "Código", pressione o botão de "OK". Quando a instalação do AnkiConnect finalizar, feche o Anki completamente, o abra novamente e continue seguindo o guia.
 
 ### Configurando o AnkiConnect
 
@@ -59,7 +61,7 @@ Para que a extensão funcione, é necessário que você instale o addon [AnkiCon
 
 3. Quando finalizar, pressione o botão de "OK", e feche a janela de "Extensões". Pronto, a configuração do Anki acabou, agora é necessário configurar a extensão no navegador.
 
-## No navegador
+## 2. No navegador
 
 1. Clique no ícone da extensão, e depois em "Configurações".
 
