@@ -7,14 +7,14 @@ export type TemplateType = Notifications.TemplateType;
 export function notify(
     title: string,
     message: string,
-    iconUrl = "/assets/icons/anki_icon.svg",
+    iconUrl = "assets/icons/anki_icon.png",
     type: TemplateType = "basic",
 ): void {
     const notification: Notification = {
         type,
         title,
         message,
-        iconUrl
+        iconUrl,
     }
     sendEvent({
         type: NOTIFICATION_EVENT_TYPE,

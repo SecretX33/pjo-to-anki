@@ -16,5 +16,10 @@ export function cssCopyCat(elem1: HTMLElement, elem2: HTMLElement): void {
 }
 
 export function findResourceUrl(relativePath: string): string {
-    return browser.runtime.getURL(relativePath);
+    try {
+        return browser.runtime.getURL(relativePath);
+    } catch (e) {
+        console.warn(`Failed to get full URL of path '${relativePath}', returning relative path instead`, e);
+        return relativePath;
+    }
 }
