@@ -6,7 +6,7 @@ O PJO to Anki é uma extensão de navegador open-source que visa facilitar a vid
 
 ### Disclaimer
 
-Esta extensão **não** é oficial do PJO, e portanto não possui nenhum vínculo com PJO. O *PJO to Anki* é um projeto desenvolvido e mantido pela comunidade para melhorar a experiência de estudo dos usuários do PJO. Nenhum suporte ou garantia é fornecido pelo PJO em relação a esta extensão. **Por favor não mandem mensagem para o suporte do site à respeito de problemas na extensão,** abram uma [Issue](https://github.com/SecretX33/pjo-to-anki/issues) diretamente aqui no GitHub. 
+Esta extensão **não** é oficial do PJO, e portanto não possui nenhum vínculo com PJO. O *PJO to Anki* é um projeto desenvolvido e mantido pela comunidade para melhorar a experiência de estudo dos usuários do PJO. Nenhum suporte ou garantia é fornecido pelo PJO em relação a esta extensão. **Por favor não mandem mensagem para o suporte do site à respeito de problemas na extensão,** ao invés disso, abram uma [Issue](https://github.com/SecretX33/pjo-to-anki/issues) diretamente aqui no GitHub. 
 
 # Instalação
 
@@ -66,7 +66,7 @@ Para que a extensão funcione, é necessário que você instale o addon [AnkiCon
 1. Clique no ícone da extensão, e depois em "Configurações".
 
 2. Na seção de configuração, insira as informações necessárias para a integração com o Anki. Segue uma breve descrição de cada item.
-   1. **URL do Anki Connect:** Opção para usuários avançados, não é necessário alterar se você não modificou as configurações do Anki Connect.
+   1. **URL do Anki Connect:** Opção para usuários avançados, só será necessário alterar se você estiver usando configurações diferentes das desse guia no seu Anki Connect.
    2. **Nome do deck:** O nome do seu deck no Anki onde as cartas serão criadas.
    3. **Tipo de nota:** O nome do tipo de nota (modelo) de carta a ser usado para criar as cartas. Se você não sabe qual é o seu, abra seu Anki, vá em "Painel", selecione o deck desejado, e verifique o nome do modelo na coluna de **Nota**. 
    4. **Nome do campo da frente (do tipo de nota):** O nome do campo da frente da carta no tipo de nota escolhido. Se você não sabe qual é, abra seu Anki, vá em "Painel", selecione o deck desejado, selecione alguma carta, e verifique o que está escrito em cima da frase da frente da carta.
@@ -75,7 +75,7 @@ Para que a extensão funcione, é necessário que você instale o addon [AnkiCon
    
 3. Quando finalizar as customizações, salve as configurações.
 
-Agora você está pronto para utilizar a extensão de forma personalizada de acordo com suas necessidades.
+Agora você já está pronto para utilizar a extensão e criar suas cartas.
 
 ## Licença
 
