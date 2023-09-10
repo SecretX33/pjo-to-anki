@@ -1,0 +1,30 @@
+{
+	"compilerOptions": {
+		"target": "ES5", // ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017','ES2018' or 'ESNEXT'.
+		"module": "ESNext", // Module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'.
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+		"useDefineForClassFields": true,
+		"skipLibCheck": false,
+
+    /* Bundler mode */
+    "moduleResolution": "node",
+    "allowImportingTsExtensions": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "noEmitOnError": true,
+    "removeComments": true,
+    "resolveJsonModule": true,
+
+    /* Linting */
+    "strict": true,
+    "allowJs": false,
+    "checkJs": false,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+	},
+	"include": ["src"]
+}
