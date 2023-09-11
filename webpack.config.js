@@ -5,7 +5,6 @@ const TerserPlugin = require('terser-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
-const ExtensionReloader = require('webpack-extension-reloader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const WextManifestWebpackPlugin = require('wext-manifest-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
@@ -16,22 +15,6 @@ const sourcePath = path.join(__dirname, 'src');
 const destPath = path.join(__dirname, 'extension');
 const nodeEnv = process.env.NODE_ENV || 'development';
 const targetBrowser = process.env.TARGET_BROWSER;
-
-const extensionReloaderPlugin =
-  nodeEnv === 'development'
-    ? new ExtensionReloader({
-        port: 9090,
-        reloadPage: true,
-        entries: {
-          // TODO: reload manifest on update
-          contentScript: 'contentScript',
-          background: 'background',
-          extensionPage: ['popup', 'options'],
-        },
-      })
-    : () => {
-        this.apply = () => {};
-      };
 
 const getExtensionFileType = (browser) => {
   if (browser === 'opera') {
@@ -171,8 +154,6 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [{from: 'src/assets', to: 'assets'}],
     }),
-    // plugin to enable browser reloading in development mode
-    extensionReloaderPlugin,
   ],
 
   optimization: {
