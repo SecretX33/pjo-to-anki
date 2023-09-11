@@ -31,10 +31,9 @@ async function handleAddAnkiCardButtonClick(sentenceDiv: Element): Promise<void>
 }
 
 function extractSentenceFromCard(cardDiv: Element): Sentence {
-    const front = (cardDiv.querySelector(".card-front") as HTMLElement).innerText;
-    const back = (cardDiv.querySelector(".card-back") as HTMLElement).innerText;
+    const front = (cardDiv.querySelector(".card-front") as HTMLElement).innerHTML;
+    const back = (cardDiv.querySelector(".card-back") as HTMLElement).innerHTML;
     return { front, back };
-
 }
 
 export {};
