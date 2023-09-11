@@ -1,6 +1,6 @@
 {
   "name": "pjo-to-anki",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Adiciona um botão para automatizar a criação de cartas no Anki à partir das frases do site.",
   "private": false,
   "repository": "https://github.com/SecretX/pjo-to-anki.git",
