@@ -1,0 +1,98 @@
+:root {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    font-size: 1.75rem;
+}
+
+#root {
+    padding-bottom: 1rem;
+}
+
+h1 {
+    color: #3e3e3e;
+}
+
+.form__div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    justify-content: space-between;
+}
+
+.form_category__section {
+    width: 100%;
+}
+.form_category__section h3 {
+    color: #646464;
+    font-size: 0.9rem;
+}
+
+.form_category_desc__p {
+    color: #464646;
+    font-size: 0.8em;
+    margin-bottom: 0.52rem;
+}
+
+.form_category_items__section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    justify-content: space-between;
+}
+
+.form_inner_category__div {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    justify-content: space-between;
+}
+
+.form_entry__p {
+}
+
+.form_entry__p label {
+    font-size: 0.9em;
+    color: #5a5a5a;
+}
+
+.form_entry__p input {
+    margin-top: 0.15rem;
+    padding: 0.4rem 0.6rem 0.4rem 0.6rem;
+    font-size: 1.0em;
+    border: 0;
+    color: #1c1c1c;
+}
+
+.form_entry__p input[type='checkbox'] {
+    margin-left: 0.3rem;
+    vertical-align: -0.15em;
+    height: 1rem;
+    width: 1rem;
+}
+
+#save_config__button {
+    width: 11rem;
+    height: 4rem;
+    background-color: rgb(234, 234, 234);
+    border-color: rgba(67, 67, 67, 0.8);
+    border-width: 1px;
+    font-size: 0.8em;
+}
+
+#save_config__button:hover {
+    background-color: rgb(197, 197, 197);
+}
+
+#reset_config__button {
+    background-color: rgb(234, 234, 234);
+    border-color: rgba(67, 67, 67, 0.8);
+    border-width: 1px;
+    font-size: 0.5em;
+    padding: 0.3rem 0.3rem;
+}
+
+#reset_config__button:hover {
+    background-color: rgb(197, 197, 197);
+}
