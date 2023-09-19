@@ -1,0 +1,4 @@
+fun main() {
+    startNotificationEventListener()
+    injectCreateAnkiCardFromSentencesButtons()
+}

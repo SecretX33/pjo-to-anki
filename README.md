@@ -30,36 +30,13 @@ Para configurar a extensão, siga os passos abaixo.
 
 ## 1. No Anki
 
-Para que a extensão funcione, é necessário que você instale o addon [AnkiConnect](https://ankiweb.net/shared/info/2055492159) no seu Anki. Se você já possui esse addon no seu Anki, siga para a seção de [Configurando o AnkiConnect](#configurando-o-ankiconnect).
+Para que a extensão funcione, é necessário que você instale o addon [AnkiConnect](https://ankiweb.net/shared/info/2055492159) no seu Anki. Se você já possui esse addon no seu Anki, siga para a seção de [No Navegador](#2-no-navegador).
 
 ### Instalando o AnkiConnect
 
 1. Na barra de menu do Anki, vá em "Ferramentas" > "Extensões", clique no botão "Obter extensões...", uma tela com um campo de "Código" será aberta para você.
 2. Acesse a página oficial da extensão [AnkiConnect](https://ankiweb.net/shared/info/2055492159), e copie o código da extensão como indicado no site, será uma sequência númerica tal como `2055698787`.
 3. No Anki, cole esse código no campo de "Código", pressione o botão de "OK". Quando a instalação do AnkiConnect finalizar, feche o Anki completamente, o abra novamente e continue seguindo o guia.
-
-### Configurando o AnkiConnect
-
-1. Na barra de menu do Anki, vá em "Ferramentas" > "Extensões", selecione o "AnkiConnect" (que você já instalou), e clique no botão "Configurar" no canto inferior direito, uma tela com as configurações será aberta para você.
-
-2. Agora, é necessário adicionar `"https://portal.programajaponesonline.com.br"` na seção de `webCorsOriginList` dessa configuração, logo abaixo do `"http://localhost"`.
-   1. **Dica:** Se você não tiver nenhuma configuração customizada no seu AnkiConnect, recomendo só copiar configuração abaixo e colar na tela tela de configuração do AnkiConnect, substituindo a configuração antiga por essa.
-
-```json
-{
-    "apiKey": null,
-    "apiLogPath": null,
-    "ignoreOriginList": [],
-    "webBindAddress": "127.0.0.1",
-    "webBindPort": 8765,
-    "webCorsOriginList": [
-        "http://localhost",
-        "https://portal.programajaponesonline.com.br"
-    ]
-}
-```
-
-3. Quando finalizar, pressione o botão de "OK", e feche a janela de "Extensões". Pronto, a configuração do Anki acabou, agora é necessário configurar a extensão no navegador.
 
 ## 2. No navegador
 
