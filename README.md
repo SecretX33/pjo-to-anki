@@ -1,18 +1,28 @@
-# PJO to Anki
+<div align="center">
+<h1><img src="docs/icons/project_banner.png" width="350"></h1>
+<p> Não perca mais tempo copiando e colando textos. Foque-se somente em entender a lição, e deixe a criação das cartas com o PJO to Anki. </p>
 
-## Descrição
+<a href="https://chrome.google.com/webstore/detail/pjo-to-anki/jpmfnecphnpnbongaehddmdchmodcilo"><img src="docs/icons/get_extension_chrome.png" alt="Get FastForward on Chromium based browsers" height="55px"> </a>
+<a href="https://addons.mozilla.org/en-US/firefox/addon/pjo-to-anki"><img src="docs/icons/get_extension_firefox.png" alt="Get FastForward for Firefox" height="55px"></a>
+</div>
 
-O PJO to Anki é uma extensão de navegador open-source que visa facilitar a vida dos estudantes que utilizam o site "PJO" para aprender e praticar frases. Com essa extensão, você pode automatizar a criação de cartas no programa Anki a partir das frases estudadas no PJO, economizando tempo e esforço.
+## O que essa extensão faz?
 
-### Disclaimer
+Basicamente, ela permite que você automatize a criação de cartas no Anki à partir das frases do site.
 
-Esta extensão **não** é oficial do PJO, e portanto não possui nenhum vínculo com PJO. O *PJO to Anki* é um projeto desenvolvido e mantido pela comunidade para melhorar a experiência de estudo dos usuários do PJO. Nenhum suporte ou garantia é fornecido pelo PJO em relação a esta extensão. **Por favor não mandem mensagem para o suporte do site à respeito de problemas na extensão,** ao invés disso, abram uma [Issue](https://github.com/SecretX33/pjo-to-anki/issues) diretamente aqui no GitHub. 
+Ao clicar no botão que aparecerá ao lado das frases, a carta da frase será automaticamente adicionada no seu Anki, ou seja, você nunca mais terá que copiar e colar manualmente o conteúdo do site no Anki novamente.
+
+## Disclaimer
+
+Esta extensão não é oficial do PJO, e portanto não possui nenhum vínculo com PJO. O PJO to Anki é um projeto desenvolvido e mantido pela comunidade para melhorar a experiência de estudo dos usuários do PJO.
+
+Nenhum suporte ou garantia é fornecido pelo PJO em relação a esta extensão. **Por favor não mandem mensagem para o suporte do site à respeito de problemas na extensão,** ao invés disso, abram uma [Issue](https://github.com/SecretX33/pjo-to-anki/issues) diretamente aqui no GitHub.
 
 # Instalação
 
 Para utilizar o **PJO to Anki**, siga as instruções abaixo:
 
-1. Instale a extensão em seu navegador pela loja de extensões do seu navegador.
+1. Instale a extensão em seu navegador pela loja de extensões do seu navegador (utilize os links no início desse readme).
 
 2. **[Importante!]** Siga as instruções da seção de [Configuração](#Configuração) *exatamente* como descritas.
 
@@ -45,11 +55,11 @@ Para que a extensão funcione, é necessário que você instale o addon [AnkiCon
 2. Na seção de configuração, insira as informações necessárias para a integração com o Anki. Segue uma breve descrição de cada item.
    1. **URL do Anki Connect:** Opção para usuários avançados, só será necessário alterar se você estiver usando configurações diferentes das desse guia no seu Anki Connect.
    2. **Nome do deck:** O nome do seu deck no Anki onde as cartas serão criadas.
-   3. **Tipo de nota:** O nome do tipo de nota (modelo) de carta a ser usado para criar as cartas. Se você não sabe qual é o seu, abra seu Anki, vá em "Painel", selecione o deck desejado, e verifique o nome do modelo na coluna de **Nota**. 
+   3. **Tipo de nota:** O nome do tipo de nota (modelo) de carta a ser usado para criar as cartas. Se você não sabe qual é o seu, abra seu Anki, vá em "Painel", selecione o deck desejado, e verifique o nome do modelo na coluna de **Nota**.
    4. **Nome do campo da frente (do tipo de nota):** O nome do campo da frente da carta no tipo de nota escolhido. Se você não sabe qual é, abra seu Anki, vá em "Painel", selecione o deck desejado, selecione alguma carta, e verifique o que está escrito em cima da frase da frente da carta.
    5. **Nome do campo do verso (do tipo de nota):** O nome do campo do verso da carta no tipo de nota escolhido. Se você não sabe qual é, abra seu Anki, vá em "Painel", selecione o deck desejado, selecione alguma carta, e verifique o que está escrito em cima da frase do verso da carta.
    6. **Checar por cartas duplicadas em subdecks:** Opção para usuários avançados, não é necessário alterar.
-   
+
 3. Quando finalizar as customizações, salve as configurações.
 
 Agora você já está pronto para utilizar a extensão e criar suas cartas.
