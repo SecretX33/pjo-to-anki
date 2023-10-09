@@ -2,8 +2,8 @@
 <h1><img src="docs/icons/project_banner.png" width="350"></h1>
 <p> Não perca mais tempo copiando e colando textos. Foque-se somente em entender a lição, e deixe a criação das cartas com o PJO to Anki. </p>
 
-<a href="https://chrome.google.com/webstore/detail/pjo-to-anki/jpmfnecphnpnbongaehddmdchmodcilo"><img src="docs/icons/get_extension_chrome.png" alt="Get FastForward on Chromium based browsers" height="55px"> </a>
-<a href="https://addons.mozilla.org/en-US/firefox/addon/pjo-to-anki"><img src="docs/icons/get_extension_firefox.png" alt="Get FastForward for Firefox" height="55px"></a>
+<a href="https://chrome.google.com/webstore/detail/pjo-to-anki/jpmfnecphnpnbongaehddmdchmodcilo"><img src="docs/icons/get_extension_chrome.png" alt="Get PJO to Anki on Chromium based browsers" height="55px"> </a>
+<a href="https://addons.mozilla.org/en-US/firefox/addon/pjo-to-anki"><img src="docs/icons/get_extension_firefox.png" alt="Get PJO to Anki for Firefox" height="55px"></a>
 </div>
 
 ## O que essa extensão faz?
