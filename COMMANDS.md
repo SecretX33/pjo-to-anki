@@ -10,7 +10,7 @@ This project makes use of some environment variables in order to control some th
 
 - `TARGET_BROWSER`: required, valid values are `firefox`, `chrome`.
     - Change this to change which browser to build to.
-- `IS_DEVELOPMENT`: optional, valid values are unset, `true`, or `false`.
+- `IS_DEVELOPMENT`: optional, valid values are `true`, or `false` (default: `false`).
 
 ## Development
 
