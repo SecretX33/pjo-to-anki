@@ -1,4 +1,4 @@
 fun main() {
     startNotificationEventListener()
-    injectCreateAnkiCardFromSentencesButtons()
+    addCreateAnkiCardFromSentencesButtons()
 }

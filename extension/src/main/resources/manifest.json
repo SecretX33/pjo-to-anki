@@ -74,7 +74,10 @@
             "matches": [
                 "https://portal.programajaponesonline.com.br/*"
             ],
-            "css": ["css/vanillatoasts.min.css"],
+            "css": [
+                "css/vanillatoasts.min.css",
+                "css/contentScript.css"
+            ],
             "js": ["js/vanillatoasts.min.js"]
         },
         {
