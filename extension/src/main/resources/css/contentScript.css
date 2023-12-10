@@ -1,0 +1,37 @@
+:root {
+    --hover-brightness-level: 1.14;
+}
+
+.add-anki-card {
+    background-size: 100% 100%;
+    margin-left: 0.8rem;
+    display: inline-table;
+    height: 0.8rem;
+    width: 0.8rem;
+    cursor: pointer;
+}
+
+.add-anki-card:hover {
+    filter: brightness(var(--hover-brightness-level));
+}
+
+.add-all-anki-card-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.add-all-anki-card {
+    background-color: #4CAF50;
+    color: white;
+    padding: 7px 12px;
+    border-radius: 6px;
+    border-color: transparent;
+    font-size: 14px;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.add-all-anki-card:hover {
+    filter: brightness(var(--hover-brightness-level));
+}

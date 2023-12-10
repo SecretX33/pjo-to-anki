@@ -16,14 +16,13 @@ class CreateBrowserManifest(
     private val destinationManifestFile = extensionFolder.resolve("manifest.json")
     private val buildGradleFile = File("$rootDir/build.gradle.kts")
     private val placeholders = mapOf(
-        "teste" to "abc",
         "name" to "PJO to Anki",
         "version" to ("version = \"((\\d+.?)+?)\"".toRegex().find(buildGradleFile.readText())?.groupValues?.get(1)
             ?: throw IllegalStateException("Didn't find 'version' field in '$buildGradleFile' file")),
         "description" to "Adiciona um botão para automatizar a criação de cartas no Anki à partir das frases do site.",
         "author" to "SecretX",
         "repository" to "https://github.com/SecretX/pjo-to-anki",
-    ).mapKeys { "<${it.key}>" }
+    ).mapKeys { "{{${it.key}}}" }
     private val targetBrowser: String = targetBrowser()
 
     /**

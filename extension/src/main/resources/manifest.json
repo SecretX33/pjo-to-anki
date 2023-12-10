@@ -1,8 +1,8 @@
 {
     "__chrome|opera__manifest_version": 3,
     "__firefox__manifest_version": 2,
-    "name": "<name>",
-    "version": "<version>",
+    "name": "{{name}}",
+    "version": "{{version}}",
     "icons": {
         "16": "assets/icons/favicon_16.png",
         "32": "assets/icons/favicon_32.png",
@@ -16,17 +16,17 @@
         }
     ],
     "__firefox__web_accessible_resources": ["assets/icons/*", "css/*"],
-    "description": "<description>",
-    "homepage_url": "<repository>",
-    "short_name": "<name>",
+    "description": "{{description}}",
+    "homepage_url": "{{repository}}",
+    "short_name": "{{name}}",
     "permissions": ["storage"],
     "__chrome|opera__content_security_policy": {
         "extension_pages": "script-src 'self'; object-src 'self'"
     },
     "__firefox__content_security_policy": "script-src 'self'; object-src 'self'",
-    "__chrome|firefox__author": "<author>",
+    "__chrome|firefox__author": "{{author}}",
     "__opera__developer": {
-        "name": "<author>"
+        "name": "{{author}}"
     },
     "__firefox__applications": {
         "gecko": {
@@ -43,7 +43,7 @@
             "48": "assets/icons/favicon_48.png",
             "128": "assets/icons/favicon_128.png"
         },
-        "default_title": "<name>",
+        "default_title": "{{name}}",
         "__firefox__browser_style": false
     },
     "__firefox__browser_action": {
@@ -54,7 +54,7 @@
             "48": "assets/icons/favicon_48.png",
             "128": "assets/icons/favicon_128.png"
         },
-        "default_title": "<name>",
+        "default_title": "{{name}}",
         "__firefox__browser_style": false
     },
     "__chrome|opera__options_page": "options.html",
@@ -74,7 +74,10 @@
             "matches": [
                 "https://portal.programajaponesonline.com.br/*"
             ],
-            "css": ["css/vanillatoasts.min.css"],
+            "css": [
+                "css/vanillatoasts.min.css",
+                "css/contentScript.css"
+            ],
             "js": ["js/vanillatoasts.min.js"]
         },
         {
