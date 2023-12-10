@@ -24,6 +24,9 @@ hs_err_pid*
 .idea/
 out/
 
+### VS Code ###
+.vscode/
+
 # Sensitive files
 local.properties
 *.crt
@@ -32,5 +35,7 @@ local.properties
 ### Gradle ###
 .gradle
 build/
-**/build/
 .gradle-cache
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
