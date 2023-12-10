@@ -1,3 +1,7 @@
+:root {
+    --hover-brightness-level: 1.14;
+}
+
 .add-anki-card {
     background-size: 100% 100%;
     margin-left: 0.8rem;
@@ -5,6 +9,10 @@
     height: 0.8rem;
     width: 0.8rem;
     cursor: pointer;
+}
+
+.add-anki-card:hover {
+    filter: brightness(var(--hover-brightness-level));
 }
 
 .add-all-anki-card-container {
@@ -21,4 +29,9 @@
     border-color: transparent;
     font-size: 14px;
     font-weight: 400;
+    cursor: pointer;
+}
+
+.add-all-anki-card:hover {
+    filter: brightness(var(--hover-brightness-level));
 }
