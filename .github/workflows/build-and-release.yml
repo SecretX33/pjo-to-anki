@@ -1,0 +1,108 @@
+name: Build and Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_mode:
+        description: Build mode
+        type: choice
+        required: true
+        default: build and release
+        options:
+          - build and release
+          - build and release (force)
+          - build only
+      version_tag:
+        description: Version tag (e.g. 1.2.5, empty to use the one defined in cargo.toml)
+        type: string
+        required: false
+      release_name:
+        description: Release name (e.g. v1.2.5, empty to generate one automatically)
+        type: string
+        required: false
+
+jobs:
+  build:
+    name: Build
+    strategy:
+      matrix:
+        target_browser:
+          - chrome
+          - firefox
+    uses: ./.github/workflows/build-for-browser.yml
+    with:
+      target_browser: ${{ matrix.target_browser }}
+    secrets: inherit
+
+  release:
+    runs-on: ubuntu-latest
+    name: Release
+    needs: build
+    permissions:
+      contents: write
+    if: success() && (inputs.build_mode == 'build and release' || inputs.build_mode == 'build and release (force)')
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: dist
+
+      - name: Move artifacts
+        run: |
+          mkdir -v -p dist
+          for file in dist/*/*; do mv -v "$file" dist/; done
+          find dist -type f -empty -print -delete -o -type d -empty -print -delete
+
+      - name: List dist folder contents
+        run: |
+          echo GitHub ref is: ${{ github.ref }}
+          echo === Current folder ===
+          pwd
+          echo === Root folder contents ===
+          ls -la
+          echo === Dist folder contents ===
+          ls -la dist
+
+      - name: Set version
+        id: version
+        run: |
+          version="${{ inputs.version_tag }}"
+          if [ -z "$version" ]; then
+            version=$(grep '^\s*version =' build.gradle.kts | awk '{print $3}' | tr -d '"')
+          fi
+          echo "New version is: $version"
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - name: Set release name
+        id: release_name
+        run: |
+          release_name="${{ inputs.release_name }}"
+          if [ -z "$release_name" ]; then
+            release_name=v${{ steps.version.outputs.version }}
+          fi
+          echo "New release_name is: $release_name"
+          echo "release_name=$release_name" >> $GITHUB_OUTPUT
+
+      - name: Delete existing tag and release (only forced releases)
+        uses: dev-drprasad/delete-tag-and-release@v1.0
+        if: inputs.build_mode == 'build and release (force)'
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          delete_release: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ steps.release_name.outputs.release_name }}
+          tag_name: ${{ steps.version.outputs.version }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          files: |
+            ./dist/chrome.zip
+            ./dist/firefox.xpi
