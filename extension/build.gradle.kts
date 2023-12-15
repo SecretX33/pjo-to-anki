@@ -31,7 +31,7 @@ tasks {
     val options = ":extension:options:browserDistribution"
     val extensionFolder = file("$projectDir/build/extension")
 
-    val copyBundleFile = register<Copy>("copyBundleFile") {
+    val copyBundleFile by registering(Copy::class) {
         dependsOn(background, content, popup, options)
         from("${layout.buildDirectory.asFile.get()}/distributions") {
             include("**/*.js")
@@ -40,7 +40,7 @@ tasks {
     }
 
     // Copy resources
-    val copyResources = register<Copy>("copyResources") {
+    val copyResources by registering(Copy::class) {
         outputs.upToDateWhen { false }
         val resourceFolder = file("$projectDir/src/main/resources")
 
@@ -56,7 +56,7 @@ tasks {
     }
 
     // Build modules
-    val buildExtension = register("buildExtension") {
+    val buildExtension by registering {
         group = "build"
         dependsOn(copyBundleFile, copyResources)
         doFirst {
@@ -68,7 +68,7 @@ tasks {
     }
 
     // Zip extension
-    val packageExtension = register<Zip>("packageExtension") {
+    val packageExtension by registering(Zip::class) {
         group = "build"
         dependsOn(buildExtension)
         from(extensionFolder)
