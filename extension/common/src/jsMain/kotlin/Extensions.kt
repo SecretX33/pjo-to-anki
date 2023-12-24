@@ -11,6 +11,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.w3c.dom.Element
 import kotlin.time.Duration
 
 val scope by lazy {
@@ -19,6 +20,8 @@ val scope by lazy {
         .plus(CoroutineName("PJO to Anki default coroutine scope"))
     CoroutineScope(context)
 }
+
+val Element.tagNameLowercase: String get() = tagName.lowercase()
 
 fun <T : Any> jsObject(): T = js("{}") as T
 
