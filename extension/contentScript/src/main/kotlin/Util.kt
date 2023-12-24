@@ -5,6 +5,6 @@ import org.w3c.dom.HTMLElement
 @Suppress("UNCHECKED_CAST")
 fun <T : Element> Document.createElement(tagName: String): T = createElement(tagName) as T
 
-fun HTMLElement.removeMargins(): HTMLElement = apply {
-    style.setProperty("margin", "0")
+fun <T : Element> T.removeMargins(): T = apply {
+    (this as? HTMLElement)?.style?.setProperty("margin", "0")
 }

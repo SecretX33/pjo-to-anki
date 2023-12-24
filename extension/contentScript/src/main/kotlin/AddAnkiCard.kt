@@ -1,4 +1,3 @@
-
 import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.launch
@@ -10,42 +9,47 @@ import org.w3c.dom.asList
 
 @Suppress("UNCHECKED_CAST")
 fun addCreateAnkiCardFromSentencesButtons() {
-    val sentencesDivs = document.querySelectorAll("div.sentence").asList() as List<HTMLElement>
+    val sentencesDivs = document.querySelectorAll(SENTENCE_DIV_CSS_SELECTOR).asList() as List<HTMLElement>
     console.info("Found '${sentencesDivs.size}' sentences found on page:", sentencesDivs)
 
     injectAddSentenceButtons(sentencesDivs)
-    injectAddAllSentencesButton(sentencesDivs)
+    injectAddAllSentencesButtons(sentencesDivs)
 }
 
 private fun injectAddSentenceButtons(sentencesDivs: List<HTMLElement>) {
     sentencesDivs.forEach { sentenceDiv ->
-        val buttonsDiv = sentenceDiv.querySelector("div.port")
+        val buttonsDiv = sentenceDiv.querySelector(SENTENCE_BUTTONS_CSS_SELECTOR)
         if (buttonsDiv == null) {
             console.error("Didn't find buttons div!")
             return@forEach
         }
-        val addAnkiCardSpan = document.createElement<HTMLElement>("span").apply {
-            className = "add-anki-card"
-            style.setProperty("background-image", "url('${findResourceUrl("/assets/icons/plus_icon.png")}')")
-
-            addEventListener("click", { handleAddAnkiCardButtonClick(sentenceDiv) })
-        }
-        buttonsDiv.insertBefore(addAnkiCardSpan, buttonsDiv.querySelector(".expand-card"))
+        val addAnkiCardButton = addCardButton(sentenceDiv)
+        val expandCardDetailsButton = buttonsDiv.querySelector(".expand-card")
+        buttonsDiv.insertBefore(addAnkiCardButton, expandCardDetailsButton)
     }
 }
 
+private fun addCardButton(sentenceDiv: HTMLElement): HTMLElement =
+    document.createElement<HTMLElement>("span").apply {
+        className = "add-anki-card"
+        style.setProperty("background-image", "url('${findResourceUrl("/assets/icons/plus_icon.png")}')")
+
+        addEventListener("click", { handleAddAnkiCardButtonClick(sentenceDiv) })
+    }
+
 /**
+ * Find viable points where it would make sense to inject the `Add All Sentences`, and add these buttons into
+ * the page.
  *
- * Wraps the `h2` anchor, so we can inject the `Add All Sentences` button right next to it.
- *
- * We are matching the `h2` anchor by its text content, which is `Frases de Exemplo` in Portuguese, so something
- * like this:
+ * The goal is to find and group sentences into blocks, find a viable anchor if it exists (or create one if it
+ * doesn't), then add the 'Add All Sentences' button right next to it. An example of a viable anchor is a title,
+ * such as:
  *
  * ```html
  * <h2>Frases de Exemplo</h2>
  * ```
  *
- * Should become something like this after the injection:
+ * That will be transformed into something like this:
  *
  * ```html
  * <div style="margin-bottom: 25px;">
@@ -56,42 +60,56 @@ private fun injectAddSentenceButtons(sentencesDivs: List<HTMLElement>) {
  * </div>
  * ```
  */
-private fun injectAddAllSentencesButton(sentencesDivs: List<HTMLElement>) {
-    val a2Anchor = document.getElementsByTagName("h2").asList()
-        .filterIsInstance<HTMLElement>()
-        .firstOrNull { it.textContent?.contains("Frases de Exemplo", ignoreCase = true) == true }
-        ?: run {
-            console.warn("Didn't find any h2 tag with 'Frases de Exemplo' to use as anchor for Add All Sentences button, skipping it for this page...")
-            return
-        }
-    val a2Styles = window.getComputedStyle(a2Anchor)
+private fun injectAddAllSentencesButtons(sentencesDivs: List<HTMLElement>) {
+    val injectPoints = findAddAllSentencesInjectPoints(sentencesDivs).ifEmpty {
+        console.warn("No inject points found, skipping 'Add All Sentences' button for this page...")
+        return
+    }
+    console.info("Found ${injectPoints.size} inject points for 'Add All Sentences' buttons:", injectPoints.toTypedArray())
 
-    val addAllAnkiCardsButton = document.createElement<HTMLButtonElement>("button").apply {
+    injectPoints.forEachIndexed { index, injectPoint ->
+        val anchor = injectPoint.anchor
+        val sentences = injectPoint.sentences
+
+        val anchorElement = when (anchor) {
+            is AnchorPoint.Missing -> document.createElement("h2").apply {
+                textContent = DEFAULT_ANCHOR_TEXT
+                sentences.first().parentElement!!.insertBefore(this, sentences.first())
+            }
+            is AnchorPoint.Title -> anchor.titleElement
+        }
+        val addAllAnkiCardsButton = addAllAnkiCardsButton(sentences)
+
+        val wrappedAnchorElement = document.createElement<HTMLElement>("div").apply {
+            style.marginBottom = window.getComputedStyle(anchorElement).marginBottom
+                .takeIf { it.isNotBlank() }
+                ?: DEFAULT_ANCHOR_MARGIN_BOTTOM
+        }
+        anchorElement.replaceWith(wrappedAnchorElement)
+
+        wrappedAnchorElement.appendElement("div") {
+            className = "add-all-anki-card-container"
+
+            appendChild(anchorElement.removeMargins())
+            appendChild(addAllAnkiCardsButton)
+        }
+
+        console.info("Successfully injected 'Add All Sentences' button (${index + 1}/${injectPoints.size})")
+    }
+}
+
+private fun addAllAnkiCardsButton(sentencesDivs: Collection<HTMLElement>): HTMLButtonElement =
+    document.createElement<HTMLButtonElement>("button").apply {
         className = "add-all-anki-card"
         type = "button"
         textContent = "Adicionar todas"
 
         // Delegates the card creation to each individual sentence button
         addEventListener("click", {
-            console.info("Adding all ${sentencesDivs.size} sentences from this page on Anki...")
+            console.info("Adding ${sentencesDivs.size} sentences from this page on Anki...")
             sentencesDivs.forEach(::handleAddAnkiCardButtonClick)
         })
     }
-
-    val wrappedA2Anchor = document.createElement<HTMLElement>("div").apply {
-        style.marginBottom = a2Styles.marginBottom
-    }
-    a2Anchor.replaceWith(wrappedA2Anchor)
-
-    wrappedA2Anchor.appendElement("div") {
-        className = "add-all-anki-card-container"
-
-        appendChild(a2Anchor.removeMargins())
-        appendChild(addAllAnkiCardsButton)
-    }
-
-    console.info("Successfully injected 'Add All Sentences' button")
-}
 
 private fun handleAddAnkiCardButtonClick(sentenceDiv: Element) {
     val cardDiv = sentenceDiv.querySelector(".card")
@@ -117,3 +135,12 @@ private fun extractSentenceFromCard(cardDiv: Element): Sentence {
         back = back,
     )
 }
+
+private const val DEFAULT_ANCHOR_TEXT = "Frases"
+private const val DEFAULT_ANCHOR_MARGIN_BOTTOM = "25px"
+
+private const val SENTENCE_DIV_CSS_SELECTOR = "div.sentence"
+private const val SENTENCE_BUTTONS_CSS_SELECTOR = "div.port"
+
+fun Element.isSentenceDiv(): Boolean = tagName.equals("div", ignoreCase = true)
+    && classList.contains("sentence")
