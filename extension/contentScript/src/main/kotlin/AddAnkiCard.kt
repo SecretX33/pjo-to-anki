@@ -69,7 +69,7 @@ private fun injectAddAllSentencesButtons(sentencesDivs: List<HTMLElement>) {
 
     injectPoints.forEachIndexed { index, injectPoint ->
         val anchor = injectPoint.anchor
-        val sentences = injectPoint.sentences
+        val sentences = injectPoint.sentences.toList()
 
         val anchorElement = when (anchor) {
             is AnchorPoint.Missing -> document.createElement("h2").apply {
@@ -98,7 +98,7 @@ private fun injectAddAllSentencesButtons(sentencesDivs: List<HTMLElement>) {
     }
 }
 
-private fun addAllAnkiCardsButton(sentencesDivs: Collection<HTMLElement>): HTMLButtonElement =
+private fun addAllAnkiCardsButton(sentencesDivs: List<HTMLElement>): HTMLButtonElement =
     document.createElement<HTMLButtonElement>("button").apply {
         className = "add-all-anki-card"
         type = "button"
@@ -107,7 +107,11 @@ private fun addAllAnkiCardsButton(sentencesDivs: Collection<HTMLElement>): HTMLB
         // Delegates the card creation to each individual sentence button
         addEventListener("click", {
             console.info("Adding ${sentencesDivs.size} sentences from this page on Anki...")
-            sentencesDivs.forEach(::handleAddAnkiCardButtonClick)
+
+            sentencesDivs.forEachIndexed { index, sentenceDiv ->
+                console.info("Adding Anki card ${index + 1} of ${sentencesDivs.size}")
+                handleAddAnkiCardButtonClick(sentenceDiv)
+            }
         })
     }
 
@@ -136,7 +140,7 @@ private fun extractSentenceFromCard(cardDiv: Element): Sentence {
     )
 }
 
-private const val DEFAULT_ANCHOR_TEXT = "Frases"
+private const val DEFAULT_ANCHOR_TEXT = "Frases de Exemplo"
 private const val DEFAULT_ANCHOR_MARGIN_BOTTOM = "25px"
 
 private const val SENTENCE_DIV_CSS_SELECTOR = "div.sentence"

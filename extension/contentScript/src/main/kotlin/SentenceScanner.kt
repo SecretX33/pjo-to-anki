@@ -1,4 +1,3 @@
-import org.w3c.dom.Element
 import org.w3c.dom.HTMLElement
 
 private val SCAN_TITLE_TAGS = setOf("h1", "h2", "h3", "h4", "h5", "h6")
@@ -38,6 +37,7 @@ fun findAddAllSentencesInjectPoints(sentences: Collection<HTMLElement>): Collect
     while (deque.isNotEmpty()) {
         val sentence = deque.removeFirst()
         val sentencesInSection = sentence.getSectionSentences()
+        console.info("Sentences in section:", sentencesInSection.toTypedArray())
         deque.removeAll(sentencesInSection)
 
         addAllSentencesInjectPoints += AddAllSentencesInjectPoints(
@@ -49,17 +49,10 @@ fun findAddAllSentencesInjectPoints(sentences: Collection<HTMLElement>): Collect
 }
 
 private fun HTMLElement.getSectionSentences(): Collection<HTMLElement> =
-    generateSequence(this) { it.nextNonIgnoredElementSibling as? HTMLElement }
+    generateSequence(this) { it.nextElementSibling as? HTMLElement }
+        .filter { it.tagNameLowercase !in SCAN_IGNORED_TAGS }
         .takeWhile { it.isSentenceDiv() }
-        .toList()
-
-private val Element.nextNonIgnoredElementSibling: Element? get() {
-    var next: Element
-    do {
-        next = nextSibling as? Element ?: return null
-    } while (next.tagNameLowercase in SCAN_IGNORED_TAGS)
-    return next
-}
+        .toSet()
 
 private fun findAnchorPoint(sentence: HTMLElement): AnchorPoint {
     val anchorElement = (sentence.previousElementSibling as? HTMLElement)
