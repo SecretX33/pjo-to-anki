@@ -24,15 +24,11 @@ Para utilizar o **PJO to Anki**, siga as instruções abaixo:
 
 1. Instale a extensão em seu navegador pela loja de extensões do seu navegador (utilize os links no início desse readme).
 
-2. **[Importante!]** Siga as instruções da seção de [Configuração](#Configuração) *exatamente* como descritas.
+2. Siga as instruções da seção de [Configuração](#Configuração) *exatamente* como descritas. **(Importante!)**
 
 3. Abra o Anki e mantenha ele aberto (necessário para que a extensão consiga criar as cartas no Anki).
 
-4. Acesse o site do PJO e comece a estudar frases.
-
-5. Quando encontrar uma frase que deseja adicionar ao Anki, clique no botão da extensão <img src="docs/icons/plus_icon.png" width="14" title="Botão de adicionar frase no Anki"> que estará ao lado da frase.
-
-Pronto, agora você já consegue adicionar cartas ao Anki com um único clique!
+Pronto, agora você já consegue adicionar cartas ao Anki com um único clique! Acesse o site do PJO e comece a estudar frases, quando encontrar uma frase que deseja adicionar ao Anki, clique no botão da extensão <img src="docs/icons/plus_icon.png" width="14" title="Botão de adicionar frase no Anki"> que estará ao lado da frase.
 
 # Configuração
 
@@ -44,8 +40,10 @@ Para que a extensão funcione, é necessário que você instale o addon [AnkiCon
 
 ### Instalando o AnkiConnect
 
+O AnkiConnect é um addon para o Anki que permite que a extensão se comunique com o Anki para que seja possível adicionar novas cartas.
+
 1. Na barra de menu do Anki, vá em "Ferramentas" > "Extensões", clique no botão "Obter extensões...", uma tela com um campo de "Código" será aberta para você.
-2. Acesse a página oficial da extensão [AnkiConnect](https://ankiweb.net/shared/info/2055492159), e copie o código da extensão como indicado no site, será uma sequência númerica tal como `2055698787`.
+2. Acesse a página oficial da extensão [AnkiConnect](https://ankiweb.net/shared/info/2055492159), e copie o código da extensão como indicado no site, será uma sequência númerica tal como `2055492159`.
 3. No Anki, cole esse código no campo de "Código", pressione o botão de "OK". Quando a instalação do AnkiConnect finalizar, feche o Anki completamente, o abra novamente e continue seguindo o guia.
 
 ## 2. No navegador
