@@ -117,9 +117,7 @@ private fun addAllAnkiCardsButton(sentencesDivs: List<HTMLElement>): HTMLButtonE
     }
 
 private fun handleAddAnkiCardButtonClick(sentenceDiv: Element) {
-    val cardDiv = sentenceDiv.querySelector(".card")
-        ?: throw IllegalStateException("Could not find 'card' in sentence div")
-    val sentence = extractSentenceFromCard(cardDiv)
+    val sentence = extractSentenceFromCard(sentenceDiv)
     scope.launch {
         try {
             requestAnkiAddNewCard(sentence)
@@ -129,15 +127,20 @@ private fun handleAddAnkiCardButtonClick(sentenceDiv: Element) {
     }
 }
 
-private fun extractSentenceFromCard(cardDiv: Element): Sentence {
-    val front = (cardDiv.querySelector(".card-front") as? HTMLElement)?.innerHTML
+private fun extractSentenceFromCard(sentenceDiv: Element): Sentence {
+    val cardDiv = sentenceDiv.querySelector(CARD_DIV_CSS_SELECTOR)
+        ?: throw IllegalStateException("Could not find 'card' in sentence div")
+    val front = (cardDiv.querySelector(CARD_FRONT_SIDE_CSS_SELECTOR) as? HTMLElement)?.innerHTML
         ?: throw IllegalStateException("Could not find sentence of the front of the card")
-    val back = (cardDiv.querySelector(".card-back") as? HTMLElement)?.innerHTML
+    val back = (cardDiv.querySelector(CARD_BACK_SIDE_CSS_SELECTOR) as? HTMLElement)?.innerHTML
         ?: throw IllegalStateException("Could not find sentence of the back of the card")
+    val audioUrl = sentenceDiv.querySelector(SENTENCE_AUDIO_CSS_SELECTOR)?.getAttribute("src")
+        ?.takeIf { it.isNotBlank() }
 
     return Sentence(
         front = front,
         back = back,
+        audioUrl = audioUrl,
     )
 }
 
@@ -146,6 +149,11 @@ private const val DEFAULT_ANCHOR_MARGIN_BOTTOM = "25px"
 
 private const val SENTENCE_DIV_CSS_SELECTOR = "div.sentence"
 private const val SENTENCE_BUTTONS_CSS_SELECTOR = "div.port"
+private const val SENTENCE_AUDIO_CSS_SELECTOR = "$SENTENCE_BUTTONS_CSS_SELECTOR > audio"
+
+private const val CARD_DIV_CSS_SELECTOR = ".card"
+private const val CARD_FRONT_SIDE_CSS_SELECTOR = ".card-front"
+private const val CARD_BACK_SIDE_CSS_SELECTOR = ".card-back"
 
 fun Element.isSentenceDiv(): Boolean = tagName.equals("div", ignoreCase = true)
     && classList.contains("sentence")

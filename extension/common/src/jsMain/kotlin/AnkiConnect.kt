@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 data class Sentence(
     val front: String,
     val back: String,
+    val audioUrl: String?,
 )
 
 @Serializable
