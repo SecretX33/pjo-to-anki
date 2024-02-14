@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.web.attributes.AutoComplete
 import org.jetbrains.compose.web.attributes.autoComplete
@@ -27,8 +28,10 @@ import org.jetbrains.compose.web.renderComposable
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 const val ANKI_CONNECT_ADDON_LINK = "https://ankiweb.net/shared/info/2055492159"
+const val SAVE_CONFIG_DEFAULT_TEXT = "Salvar configurações"
 
 fun main() {
     renderComposable("root") {
@@ -47,15 +50,15 @@ private fun Options() {
 
     val config = remember { mutableStateOf(_config!!) }
 
-    val handleSaveConfig = {
-        scope.launch {
-            try {
-                setGlobalConfig(config.value)
-                console.info("Saved config:", config.value.toNormalJsObject())
-                notifySuccess("As configurações foram salvas com sucesso.", title = "Configurações salvas", useEvent = false)
-            } catch (e: Throwable) {
-                console.info("Could not save config", config.value.toNormalJsObject(), e.nonFatalOrThrow())
-            }
+    val handleSaveConfig = suspend {
+        try {
+            config.value = config.value.trimmed()
+            setGlobalConfig(config.value)
+            console.info("Saved config:", config.value.toNormalJsObject())
+            notifySuccess("As configurações foram salvas com sucesso.", title = "Configurações salvas", useEvent = false)
+        } catch (e: Throwable) {
+            console.error("Could not save config", config.value.toNormalJsObject(), e.nonFatalOrThrow())
+            throw e
         }
     }
 
@@ -65,22 +68,36 @@ private fun Options() {
 
             NotificationOptions(config)
 
-            Div {
+            Div({ classes("action_buttons__div") }) {
+                var saveConfigText by remember { mutableStateOf(SAVE_CONFIG_DEFAULT_TEXT) }
                 formEntry {
                     Button({
                         id("save_config__button")
+                        classes("action_button_style")
                         onClick {
                             it.preventDefault()
-                            handleSaveConfig()
+                            scope.launch {
+                                runCatching { handleSaveConfig() }
+                                    .onSuccess {
+                                        saveConfigText = "Configuração salva com sucesso"
+                                        delay(1500.milliseconds)
+                                        saveConfigText = SAVE_CONFIG_DEFAULT_TEXT
+                                    }.onFailure {
+                                        saveConfigText = "Erro ao salvar configuração"
+                                        delay(2.seconds)
+                                        saveConfigText = SAVE_CONFIG_DEFAULT_TEXT
+                                    }.getOrThrow()
+                            }
                         }
                     }) {
-                        Text("Salvar configurações")
+                        Text(saveConfigText)
                     }
                 }
 
                 formEntry {
                     Button({
                         id("reset_config__button")
+                        classes("action_button_style")
                         onClick {
                             it.preventDefault()
                             config.value = createDefaultConfig()
@@ -164,6 +181,14 @@ private fun AnkiOptions(derivedConfig: MutableState<ExtensionConfig>) {
                             id = "backFieldName",
                             getValue = { deckConfig.backFieldName },
                             setValue = { deckConfig = deckConfig.copy(backFieldName = it) },
+                        )
+                    })
+
+                    formEntry({ textLabel("Nome do campo de audio", forId = "audioFieldName") }, {
+                        textInput(
+                            id = "audioFieldName",
+                            getValue = { deckConfig.audioFieldName.orEmpty() },
+                            setValue = { deckConfig = deckConfig.copy(audioFieldName = it) },
                         )
                     })
 
