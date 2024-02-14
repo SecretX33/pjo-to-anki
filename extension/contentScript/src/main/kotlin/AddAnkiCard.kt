@@ -74,7 +74,8 @@ private fun injectAddAllSentencesButtons(sentencesDivs: List<HTMLElement>) {
         val anchorElement = when (anchor) {
             is AnchorPoint.Missing -> document.createElement("h2").apply {
                 textContent = DEFAULT_ANCHOR_TEXT
-                sentences.first().parentElement!!.insertBefore(this, sentences.first())
+                val firstSentence = sentences.first()
+                firstSentence.parentElement!!.insertBefore(this, firstSentence)
             }
             is AnchorPoint.Title -> anchor.titleElement
         }

@@ -12,8 +12,8 @@ sealed class AnchorPoint {
  * Represents a group of sentences that should have an "add all" button above [anchor], and when clicked,
  * all [sentences] must be added to Anki as cards.
  *
- * If [anchor] is [AnchorPoint.Missing], then the "add all" button should be injected on top of the first
- * sentence.
+ * If [anchor] is [AnchorPoint.Missing], then a default anchor tag must be added first, then the "add all" button
+ * must be injected as if the anchor was part of the original page.
  */
 data class AddAllSentencesInjectPoints(
     val anchor: AnchorPoint,
