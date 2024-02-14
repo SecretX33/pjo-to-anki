@@ -7,17 +7,24 @@ data class ExtensionConfig(
     val version: Int,
     val ankiConnect: AnkiConnectConfig,
     val notificationConfig: NotificationConfig = NotificationConfig(),
-)
-
-@Serializable
-data class NotificationConfig(
-    val showOnSuccess: Boolean = true,
-    val showOnWarning: Boolean = true,
-    val showOnError: Boolean = true,
-    val successTimeout: Duration = 1600.milliseconds,
-    val warningTimeout: Duration = successTimeout,
-    val errorTimeout: Duration = 4000.milliseconds,
-)
+) {
+    fun trimmed(): ExtensionConfig = copy(
+        ankiConnect = ankiConnect.run {
+            copy(
+                url = url.trim(),
+                deckConfig = deckConfig.run {
+                    copy(
+                        name = name.trim(),
+                        modelName = modelName.trim(),
+                        frontFieldName = frontFieldName.trim(),
+                        backFieldName = backFieldName.trim(),
+                        audioFieldName = audioFieldName?.trim()?.takeIf { it.isNotEmpty() },
+                    )
+                }
+            )
+        }
+    )
+}
 
 @Serializable
 data class AnkiConnectConfig(
@@ -31,7 +38,18 @@ data class DeckConfig(
     val modelName: String,
     val frontFieldName: String,
     val backFieldName: String,
+    val audioFieldName: String? = null,
     val checkDuplicatedsInSubdecks: Boolean,
+)
+
+@Serializable
+data class NotificationConfig(
+    val showOnSuccess: Boolean = true,
+    val showOnWarning: Boolean = true,
+    val showOnError: Boolean = true,
+    val successTimeout: Duration = 1600.milliseconds,
+    val warningTimeout: Duration = successTimeout,
+    val errorTimeout: Duration = 4000.milliseconds,
 )
 
 const val CURRENT_CONFIG_VERSION: Int = 1

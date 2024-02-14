@@ -4,6 +4,8 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import kotlinx.serialization.Serializable
 
+private const val RANDOM_NAME_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+
 @Serializable
 data class Note(val note: NoteOptions)
 
@@ -14,10 +16,11 @@ data class NoteOptions(
     val fields: Map<String, String>,
     val options: NoteInnerOptions,
     val tags: Set<String> = emptySet(),
+    val audio: Set<AudioOptions> = emptySet(),
 )
 
 @Serializable
-class NoteInnerOptions(
+data class NoteInnerOptions(
     val allowDuplicate: Boolean,
     val duplicateScope: String,
     val duplicateScopeOptions: DuplicateNoteOptions,
@@ -28,6 +31,13 @@ data class DuplicateNoteOptions(
     val deckName: String,
     val checkChildren: Boolean,
     val checkAllModels: Boolean,
+)
+
+@Serializable
+data class AudioOptions(
+    val url: String,
+    val filename: String,
+    val fields: Set<String>,
 )
 
 fun handleAnkiAddNewCardEvent(): EventHandler = { json ->
@@ -71,8 +81,21 @@ fun buildNote(sentence: Sentence, deck: DeckConfig): Note = Note(NoteOptions(
             checkChildren = deck.checkDuplicatedsInSubdecks,
             checkAllModels = false,
         ),
-    )
+    ),
+    audio = setOfNotNull(sentence.audioUrl?.let {
+        deck.audioFieldName?.let { audioField ->
+            AudioOptions(
+                url = it,
+                filename = "${generateRandomName(15)}.${it.substringAfterLast(".").takeIf { it.length in (1..4) } ?: "mp3"}",
+                fields = setOf(audioField),
+            )
+        }
+    })
 ))
+
+private fun generateRandomName(length: Int): String = (0..<length).joinToString("") {
+    RANDOM_NAME_CHARS.random().toString()
+}
 
 @Serializable
 data class AnkiBodyRequest<T>(

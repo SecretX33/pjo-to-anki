@@ -1,4 +1,5 @@
 import chrome.tabs.QueryInfo
+import chrome.tabs.Tab
 import kotlinx.serialization.Serializable
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -59,7 +60,7 @@ suspend inline fun <reified R> sendEventToContentScript(event: Event): R {
     }
 }
 
-suspend fun getActiveTabs() = suspendCancellableCoroutineWithTimeout(5.seconds) { continuation ->
+suspend fun getActiveTabs(): Array<Tab> = suspendCancellableCoroutineWithTimeout(5.seconds) { continuation ->
     try {
         val queryInfo = jsObject<QueryInfo>().apply {
             active = true
