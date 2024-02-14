@@ -55,6 +55,7 @@ private fun Options() {
             config.value = config.value.trimmed()
             setGlobalConfig(config.value)
             console.info("Saved config:", config.value.toNormalJsObject())
+            notifySuccess("As configurações foram salvas com sucesso.", title = "Configurações salvas", useEvent = false)
         } catch (e: Throwable) {
             console.error("Could not save config", config.value.toNormalJsObject(), e.nonFatalOrThrow())
             throw e
@@ -79,7 +80,7 @@ private fun Options() {
                                 runCatching { handleSaveConfig() }
                                     .onSuccess {
                                         saveConfigText = "Sucesso ✔"
-                                        delay(1250.milliseconds)
+                                        delay(config.value.notificationConfig.successTimeout)
                                         saveConfigText = SAVE_CONFIG_DEFAULT_TEXT
                                     }.onFailure {
                                         saveConfigText = "Erro ao salvar configurações ✖"
