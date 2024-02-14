@@ -6,9 +6,9 @@ import com.github.secretx33.targetBrowserOrNull
 import kotlin.io.path.moveTo
 
 plugins {
-    kotlin("js") version "1.9.21"
-    kotlin("plugin.serialization") version "1.9.21" apply false
-    id("org.jetbrains.compose") version "1.5.11" apply false
+    kotlin("js") version "1.9.22"
+    kotlin("plugin.serialization") version "1.9.22" apply false
+    id("org.jetbrains.compose") version "1.5.12" apply false
 }
 
 dependencies {
