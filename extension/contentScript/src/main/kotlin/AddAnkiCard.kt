@@ -130,11 +130,11 @@ private fun handleAddAnkiCardButtonClick(sentenceDiv: Element) {
 private fun extractSentenceFromCard(sentenceDiv: Element): Sentence {
     val cardDiv = sentenceDiv.querySelector(CARD_DIV_CSS_SELECTOR)
         ?: throw IllegalStateException("Could not find 'card' in sentence div")
-    val front = (cardDiv.querySelector(CARD_FRONT_SIDE_CSS_SELECTOR) as? HTMLElement)?.innerHTML
+    val front = (cardDiv.querySelector(CARD_FRONT_SIDE_CSS_SELECTOR) as? HTMLElement)?.innerHTML?.trimSentence()
         ?: throw IllegalStateException("Could not find sentence of the front of the card")
-    val back = (cardDiv.querySelector(CARD_BACK_SIDE_CSS_SELECTOR) as? HTMLElement)?.innerHTML
+    val back = (cardDiv.querySelector(CARD_BACK_SIDE_CSS_SELECTOR) as? HTMLElement)?.innerHTML?.trimSentence()
         ?: throw IllegalStateException("Could not find sentence of the back of the card")
-    val audioUrl = sentenceDiv.querySelector(SENTENCE_AUDIO_CSS_SELECTOR)?.getAttribute("src")
+    val audioUrl = sentenceDiv.querySelector(SENTENCE_AUDIO_CSS_SELECTOR)?.getAttribute("src")?.trim()
         ?.takeIf { it.isNotBlank() }
 
     return Sentence(
@@ -143,6 +143,10 @@ private fun extractSentenceFromCard(sentenceDiv: Element): Sentence {
         audioUrl = audioUrl,
     )
 }
+
+private val SURROUNDING_BR_REGEX = """^(?:<br>\s*)*([\s\S]+?)(?:\s*<br>)*$""".toRegex()
+
+private fun String.trimSentence(): String = trim().replace(SURROUNDING_BR_REGEX, "$1")
 
 private const val DEFAULT_ANCHOR_TEXT = "Frases de Exemplo"
 private const val DEFAULT_ANCHOR_MARGIN_BOTTOM = "25px"
