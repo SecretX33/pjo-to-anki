@@ -70,7 +70,7 @@ h1 {
 .action_buttons__div {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: 0.5rem;
 }
 
 #save_config__button {
