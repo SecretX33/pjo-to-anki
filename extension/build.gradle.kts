@@ -6,29 +6,33 @@ import com.github.secretx33.targetBrowserOrNull
 import kotlin.io.path.moveTo
 
 plugins {
-    kotlin("js") version "1.9.22"
+    kotlin("multiplatform") version "1.9.22"
     kotlin("plugin.serialization") version "1.9.22" apply false
     id("org.jetbrains.compose") version "1.5.12" apply false
-}
-
-dependencies {
-    implementation(project(":extension:background"))
-    implementation(project(":extension:contentScript"))
-    implementation(project(":extension:popup"))
 }
 
 kotlin {
     js(IR) {
         browser()
     }
+
+    sourceSets {
+        named("commonMain") {
+            dependencies {
+                implementation(project(":extension:background"))
+                implementation(project(":extension:contentScript"))
+                implementation(project(":extension:popup"))
+            }
+        }
+    }
 }
 
 tasks {
     // Copy js scripts
-    val background = ":extension:background:browserDistribution"
-    val content = ":extension:contentScript:browserDistribution"
-    val popup = ":extension:popup:browserDistribution"
-    val options = ":extension:options:browserDistribution"
+    val background = ":extension:background:jsBrowserDistribution"
+    val content = ":extension:contentScript:jsBrowserDistribution"
+    val popup = ":extension:popup:jsBrowserDistribution"
+    val options = ":extension:options:jsBrowserDistribution"
     val extensionFolder = file("$projectDir/build/extension")
 
     val copyBundleFile by registering(Copy::class) {

@@ -78,6 +78,6 @@ fun Throwable.nonFatalOrThrow(): Throwable =
 suspend inline fun <T> suspendCancellableCoroutineWithTimeout(
     timeout: Duration,
     crossinline block: (CancellableContinuation<T>) -> Unit,
-) = withTimeout(timeout) {
+): T = withTimeout(timeout) {
     suspendCancellableCoroutine(block)
 }

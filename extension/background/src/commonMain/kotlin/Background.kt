@@ -2,7 +2,7 @@ import chrome.runtime.MessageSender
 
 fun main() {
     chrome.runtime.onInstalled.addListener {
-        console.info("-> PJO to Anki (Backend) <-")
+        console.info("「 PJO to Anki (Backend) 」")
     }
     chrome.runtime.onMessage.addMessageListener { message, sender ->
         onEventReceived(message, sender)

@@ -3,6 +3,7 @@ import chrome.tabs.Tab
 import kotlinx.serialization.Serializable
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 typealias EventHandler = suspend (String) -> Unit
@@ -20,7 +21,10 @@ enum class EventType {
     ANKI_ADD_CARD,
 }
 
-suspend inline fun <reified R> sendEventToBackground(event: Event): R = suspendCancellableCoroutineWithTimeout(10.seconds) { continuation ->
+suspend inline fun <reified R> sendEventToBackground(
+    event: Event,
+    timeout: Duration = 10.seconds,
+): R = suspendCancellableCoroutineWithTimeout(timeout) { continuation ->
     console.info("Sending event to background", event.toNormalJsObject())
     try {
         chrome.runtime.sendMessage(encodeJson<Event>(event)) {
