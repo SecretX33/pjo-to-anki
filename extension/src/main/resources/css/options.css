@@ -7,6 +7,16 @@ h1 {
     font-size: 2.625rem;
 }
 
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
 .form__div {
     width: 100%;
     display: flex;
@@ -61,10 +71,8 @@ h1 {
 }
 
 .form_entry__p input[type='checkbox'] {
-    margin-left: 0.525rem;
-    vertical-align: -0.15em;
-    height: 1.75rem;
-    width: 1.75rem;
+    margin: 0;
+    padding: 0;
 }
 
 .action_buttons__div {

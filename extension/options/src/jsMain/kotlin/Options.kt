@@ -2,6 +2,7 @@
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import mui.material.Switch
 import react.ChildrenBuilder
 import react.FC
 import react.Props
@@ -22,6 +23,7 @@ import react.dom.html.ReactHTML.label
 import react.dom.html.ReactHTML.p
 import react.dom.html.ReactHTML.section
 import react.useState
+import web.console.console
 import web.html.HTMLParagraphElement
 import web.html.InputType
 import kotlin.time.Duration.Companion.milliseconds
@@ -158,7 +160,7 @@ private val AnkiOptions = FC<ConfigProps> { props ->
                         )
                     })
 
-                    formEntry {
+                    formEntry("flex-row") {
                         textLabel("Checar por cartas duplicadas em subdecks: ", forId = "checkDuplicatedsInSubdecks")
                         checkboxInput(
                             id = "checkDuplicatedsInSubdecks",
@@ -195,7 +197,7 @@ private val NotificationOptions = FC<ConfigProps> { props ->
                 div {
                     classNameString = "form_inner_category__div"
 
-                    formEntry {
+                    formEntry("flex-row") {
                         textLabel("Mostrar notificações de sucesso: ", forId = "showOnSuccess")
                         checkboxInput(
                             id = "showOnSuccess",
@@ -220,7 +222,7 @@ private val NotificationOptions = FC<ConfigProps> { props ->
                 div {
                     classNameString = "form_inner_category__div"
 
-                    formEntry {
+                    formEntry("flex-row") {
                         textLabel("Mostrar notificações de aviso: ", forId = "showOnWarning")
                         checkboxInput(
                             id = "showOnWarning",
@@ -245,7 +247,7 @@ private val NotificationOptions = FC<ConfigProps> { props ->
                 div {
                     classNameString = "form_inner_category__div"
 
-                    formEntry {
+                    formEntry("flex-row") {
                         textLabel("Mostrar notificações de erro: ", forId = "showOnError")
                         checkboxInput(
                             id = "showOnError",
@@ -320,9 +322,12 @@ private val SaveButtons = FC<ConfigProps> { props ->
     }
 }
 
-private fun ChildrenBuilder.formEntry(block: HTMLAttributes<HTMLParagraphElement>.() -> Unit) {
+private fun ChildrenBuilder.formEntry(
+    vararg classes: String,
+    block: HTMLAttributes<HTMLParagraphElement>.() -> Unit,
+) {
     p {
-        classNameString = "form_entry__p"
+        classNameString = (arrayOf("form_entry__p") + classes).joinToString(" ")
         block()
     }
 }
@@ -388,12 +393,11 @@ private fun ChildrenBuilder.checkboxInput(
     getValue: () -> Boolean,
     setValue: (Boolean) -> Unit,
 ) {
-    input {
+    Switch {
         this.id = id
         name = id
-        type = InputType.checkbox
         checked = getValue()
-        onChange = { setValue(it.currentTarget.checked) }
+        onClick = { setValue(!(checked ?: false)) }
     }
 }
 
