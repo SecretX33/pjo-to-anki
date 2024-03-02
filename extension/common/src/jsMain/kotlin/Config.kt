@@ -19,7 +19,8 @@ data class ExtensionConfig(
                         frontFieldName = frontFieldName.trimAndNormalizeSpaces(),
                         backFieldName = backFieldName.trimAndNormalizeSpaces(),
                         audioFieldName = audioFieldName?.trimAndNormalizeSpaces()?.takeIf { it.isNotEmpty() },
-                        tags = tags.map { it.trimAndNormalizeSpaces() }.filterTo(mutableSetOf()) { it.isNotEmpty() },
+                        tags = tags.map { it.trimAndNormalizeSpaces().replace(" ", "_") }
+                            .filterTo(mutableSetOf()) { it.isNotEmpty() },
                     )
                 }
             )

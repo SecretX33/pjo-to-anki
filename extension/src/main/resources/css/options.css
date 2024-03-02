@@ -54,6 +54,10 @@ h1 {
     justify-content: space-between;
 }
 
+.deck_options__div {
+    gap: 0.9rem;
+}
+
 .form_entry__span label {
     font-size: 1.4rem;
     color: #5a5a5a;

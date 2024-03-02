@@ -121,7 +121,7 @@ private val AnkiOptions = FC<ConfigProps> { props ->
                 h3 { +"Deck" }
 
                 div {
-                    classNameString = "form_inner_category__div"
+                    classNameString = "form_inner_category__div deck_options__div"
 
                     formEntry({ textLabel("Nome do deck", forId = "deckName") }, {
                         textInput(
@@ -155,7 +155,13 @@ private val AnkiOptions = FC<ConfigProps> { props ->
                         )
                     })
 
-                    formEntry({ textLabel("Nome do campo de áudio", forId = "audioFieldName") }, {
+                    formEntry({
+                        textLabel("Nome do campo de áudio", forId = "audioFieldName")
+                        p {
+                            classNameString = "field_description"
+                            +"Deixe em branco para não adicionar os áudios das frases."
+                        }
+                    }, {
                         textInput(
                             id = "audioFieldName",
                             getValue = { deckConfig.audioFieldName.orEmpty() },
@@ -167,12 +173,12 @@ private val AnkiOptions = FC<ConfigProps> { props ->
                         textLabel("Tags das cartas", forId = "cardTags")
                         p {
                             classNameString = "field_description"
-                            +"Separe as tags por vírgula. Exemplo: tag1, tag2, tag3."
+                            +"Separe as tags por vírgula. Exemplo: tag_1, tag_2, tag_3. Como o Anki não suporta espaços em tags, quaisquer espaços digitados serão substituídos por '_' (underline). Deixe em branco para não adicionar nenhuma tag."
                         }
                     }, {
                         textInput(
                             id = "cardTags",
-                            getValue = { deckConfig.tags.joinToString(", ") { it.trimStart() } },
+                            getValue = { deckConfig.tags.joinToString(",") },
                             setValue = { deckConfig = deckConfig.copy(tags = it.split(",").toSet()) },
                         )
                     })
