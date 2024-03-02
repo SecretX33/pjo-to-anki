@@ -83,6 +83,7 @@ fun buildNote(sentence: Sentence, deck: DeckConfig): Note = Note(NoteOptions(
             checkAllModels = false,
         ),
     ),
+    tags = deck.tags,
     audio = setOfNotNull(sentence.audioUrl?.let {
         deck.audioFieldName?.let { audioField ->
             AudioOptions(
