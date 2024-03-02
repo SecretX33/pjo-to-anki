@@ -14,6 +14,7 @@ import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.w3c.dom.Element
+import web.console.console
 import kotlin.time.Duration
 
 val scope by lazy {

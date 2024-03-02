@@ -1,6 +1,7 @@
 import chrome.tabs.QueryInfo
 import chrome.tabs.Tab
 import kotlinx.serialization.Serializable
+import web.console.console
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.time.Duration

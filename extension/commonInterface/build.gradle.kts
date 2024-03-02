@@ -22,8 +22,10 @@ kotlin {
         named("jsMain") {
             dependencies {
                 api(project.dependencies.platform("org.jetbrains.kotlin-wrappers:kotlin-wrappers-bom:1.0.0-pre.706"))
+                api("org.jetbrains.kotlin-wrappers:kotlin-emotion")
                 api("org.jetbrains.kotlin-wrappers:kotlin-react")
                 api("org.jetbrains.kotlin-wrappers:kotlin-react-dom")
+                api("org.jetbrains.kotlin-wrappers:kotlin-mui-material")
             }
         }
     }

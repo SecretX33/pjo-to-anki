@@ -4,6 +4,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import react.ChildrenBuilder
 import react.FC
+import react.Props
 import react.StateInstance
 import react.create
 import react.dom.client.createRoot
@@ -37,7 +38,6 @@ fun main() {
 @Suppress("UNCHECKED_CAST", "UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
 private val Options = FC {
     val config = useSuspendState { globalConfig() }
-    val saveConfigText = useState(SAVE_CONFIG_DEFAULT_TEXT)
 
     if (config.value == null) {
         p { +"Carregando..." }
@@ -57,18 +57,23 @@ private val Options = FC {
         }
     }
 
+    val props: ConfigProps.() -> Unit = {
+        this.config = config
+        this.saveConfig = handleSaveConfig
+    }
+
     form {
         div {
             classNameString = "form__div"
-            AnkiOptions(config)
-            NotificationOptions(config)
-            SaveButtons(config, saveConfigText, handleSaveConfig)
+            AnkiOptions(props)
+            NotificationOptions(props)
+            SaveButtons(props)
         }
     }
 }
 
-private fun ChildrenBuilder.AnkiOptions(derivedConfig: StateInstance<ExtensionConfig>) {
-    var config by derivedConfig
+private val AnkiOptions = FC<ConfigProps> { props ->
+    var config by props.config
     var ankiConnect by derivedState({ config.ankiConnect }, { config = config.copy(ankiConnect = it) })
     var deckConfig by derivedState({ ankiConnect.deckConfig }, { ankiConnect = ankiConnect.copy(deckConfig = it) })
 
@@ -167,8 +172,8 @@ private fun ChildrenBuilder.AnkiOptions(derivedConfig: StateInstance<ExtensionCo
     }
 }
 
-private fun ChildrenBuilder.NotificationOptions(derivedConfig: StateInstance<ExtensionConfig>) {
-    var config by derivedConfig
+private val NotificationOptions = FC<ConfigProps> { props ->
+    var config by props.config
     var notificationConfig by derivedState({ config.notificationConfig }, { config = config.copy(notificationConfig = it) })
 
     section {
@@ -262,13 +267,10 @@ private fun ChildrenBuilder.NotificationOptions(derivedConfig: StateInstance<Ext
     }
 }
 
-private fun ChildrenBuilder.SaveButtons(
-    derivedConfig: StateInstance<ExtensionConfig>,
-    derivedSaveConfigText: StateInstance<String>,
-    saveConfig: suspend () -> Unit
-) {
-    var config by derivedConfig
-    var saveConfigText by derivedSaveConfigText
+private val SaveButtons = FC<ConfigProps> { props ->
+    var config by props.config
+    var saveConfigText by useState(SAVE_CONFIG_DEFAULT_TEXT)
+    var saveButtonEnabled by useState(true)
 
     div {
         classNameString = "action_buttons__div"
@@ -277,18 +279,24 @@ private fun ChildrenBuilder.SaveButtons(
             button {
                 id = "save_config__button"
                 classNameString = "action_button_style"
-                onClick = {
+                onClick = eventHandler@ {
                     it.preventDefault()
+                    if (!saveButtonEnabled) return@eventHandler
+
                     mainScope.launch {
-                        runCatching { saveConfig() }
+                        runCatching { props.saveConfig() }
                             .onSuccess {
+                                saveButtonEnabled = false
                                 saveConfigText = "Sucesso ✔"
                                 delay(config.notificationConfig.successTimeout)
+                                saveButtonEnabled = true
                                 saveConfigText = SAVE_CONFIG_DEFAULT_TEXT
                             }.onFailure {
                                 it.nonFatalOrThrow()
+                                saveButtonEnabled = false
                                 saveConfigText = "Erro ao salvar configurações ✖"
                                 delay(2.seconds)
+                                saveButtonEnabled = true
                                 saveConfigText = SAVE_CONFIG_DEFAULT_TEXT
                             }.getOrThrow()
                     }
@@ -384,7 +392,12 @@ private fun ChildrenBuilder.checkboxInput(
         this.id = id
         name = id
         type = InputType.checkbox
-        value = getValue().toString()
-        onInput = { setValue(it.currentTarget.value.toBooleanStrict()) }
+        checked = getValue()
+        onChange = { setValue(it.currentTarget.checked) }
     }
+}
+
+external interface ConfigProps : Props {
+    var config: StateInstance<ExtensionConfig>
+    var saveConfig: suspend () -> Unit
 }

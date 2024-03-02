@@ -6,6 +6,7 @@ import org.w3c.dom.Element
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.asList
+import web.console.console
 
 @Suppress("UNCHECKED_CAST")
 fun addCreateAnkiCardFromSentencesButtons() {

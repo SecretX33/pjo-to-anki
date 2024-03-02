@@ -1,4 +1,5 @@
 import chrome.runtime.MessageSender
+import web.console.console
 
 fun startNotificationEventListener() = chrome.runtime.onMessage.addMessageListener { eventJson, sender ->
     onEventReceived(eventJson, sender)

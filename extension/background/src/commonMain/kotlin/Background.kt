@@ -1,4 +1,5 @@
 import chrome.runtime.MessageSender
+import web.console.console
 
 fun main() {
     chrome.runtime.onInstalled.addListener {
