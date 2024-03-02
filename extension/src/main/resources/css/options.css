@@ -54,15 +54,17 @@ h1 {
     justify-content: space-between;
 }
 
-.form_entry__p {
-}
-
-.form_entry__p label {
+.form_entry__span label {
     font-size: 1.4rem;
     color: #5a5a5a;
 }
 
-.form_entry__p input {
+.field_description {
+    font-size: 0.95rem;
+    color: #797979;
+}
+
+.form_entry__span input {
     margin-top: 0.2625rem;
     padding: 0.7rem 1.05rem 0.7rem 1.05rem;
     font-size: 1.65rem;
@@ -70,7 +72,7 @@ h1 {
     color: #1c1c1c;
 }
 
-.form_entry__p input[type='checkbox'] {
+.form_entry__span input[type='checkbox'] {
     margin: 0;
     padding: 0;
 }

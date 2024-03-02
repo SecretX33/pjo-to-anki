@@ -22,9 +22,10 @@ import react.dom.html.ReactHTML.input
 import react.dom.html.ReactHTML.label
 import react.dom.html.ReactHTML.p
 import react.dom.html.ReactHTML.section
+import react.dom.html.ReactHTML.span
 import react.useState
 import web.console.console
-import web.html.HTMLParagraphElement
+import web.html.HTMLElement
 import web.html.InputType
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
@@ -96,12 +97,14 @@ private val AnkiOptions = FC<ConfigProps> { props ->
                 div {
                     classNameString = "form_inner_category__div"
                     formEntry {
-                        textLabel("URL do Anki Connect (")
-                        a {
-                            href = ANKI_CONNECT_ADDON_LINK
-                            +"link"
+                        label {
+                            +"URL do Anki Connect ("
+                            a {
+                                href = ANKI_CONNECT_ADDON_LINK
+                                +"link"
+                            }
+                            +")"
                         }
-                        +" )"
                     }
                     formEntry {
                         textInput(
@@ -157,6 +160,20 @@ private val AnkiOptions = FC<ConfigProps> { props ->
                             id = "audioFieldName",
                             getValue = { deckConfig.audioFieldName.orEmpty() },
                             setValue = { deckConfig = deckConfig.copy(audioFieldName = it) },
+                        )
+                    })
+
+                    formEntry({
+                        textLabel("Tags das cartas", forId = "cardTags")
+                        p {
+                            classNameString = "field_description"
+                            +"Separe as tags por vírgula. Exemplo: tag1, tag2, tag3."
+                        }
+                    }, {
+                        textInput(
+                            id = "cardTags",
+                            getValue = { deckConfig.tags.joinToString(", ") { it.trimStart() } },
+                            setValue = { deckConfig = deckConfig.copy(tags = it.split(",").toSet()) },
                         )
                     })
 
@@ -324,17 +341,17 @@ private val SaveButtons = FC<ConfigProps> { props ->
 
 private fun ChildrenBuilder.formEntry(
     vararg classes: String,
-    block: HTMLAttributes<HTMLParagraphElement>.() -> Unit,
+    block: HTMLAttributes<out HTMLElement>.() -> Unit,
 ) {
-    p {
-        classNameString = (arrayOf("form_entry__p") + classes).joinToString(" ")
+    span {
+        classNameString = (arrayOf("form_entry__span") + classes).joinToString(" ")
         block()
     }
 }
 
 private fun ChildrenBuilder.formEntry(
-    buildLabel: HTMLAttributes<HTMLParagraphElement>.() -> Unit,
-    buildInput: HTMLAttributes<HTMLParagraphElement>.() -> Unit,
+    buildLabel: HTMLAttributes<out HTMLElement>.() -> Unit,
+    buildInput: HTMLAttributes<out HTMLElement>.() -> Unit,
 ) {
     formEntry {
         buildLabel()
