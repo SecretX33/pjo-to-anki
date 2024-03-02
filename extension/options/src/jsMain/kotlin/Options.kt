@@ -1,3 +1,4 @@
+@file:Suppress("FunctionName")
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -36,7 +37,7 @@ fun main() {
 @Suppress("UNCHECKED_CAST", "UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
 private val Options = FC {
     val config = useSuspendState { globalConfig() }
-    var saveConfigText by useState(SAVE_CONFIG_DEFAULT_TEXT)
+    val saveConfigText = useState(SAVE_CONFIG_DEFAULT_TEXT)
 
     if (config.value == null) {
         p { +"Carregando..." }
@@ -59,50 +60,9 @@ private val Options = FC {
     form {
         div {
             classNameString = "form__div"
-
             AnkiOptions(config)
-
             NotificationOptions(config)
-
-            div {
-                classNameString = "action_buttons__div"
-
-                formEntry {
-                    button {
-                        id = "save_config__button"
-                        classNameString = "action_button_style"
-                        onClick = {
-                            it.preventDefault()
-                            mainScope.launch {
-                                runCatching { handleSaveConfig() }
-                                    .onSuccess {
-                                        saveConfigText = "Sucesso ✔"
-                                        delay(config.value.notificationConfig.successTimeout)
-                                        saveConfigText = SAVE_CONFIG_DEFAULT_TEXT
-                                    }.onFailure {
-                                        saveConfigText = "Erro ao salvar configurações ✖"
-                                        delay(2.seconds)
-                                        saveConfigText = SAVE_CONFIG_DEFAULT_TEXT
-                                    }.getOrThrow()
-                            }
-                        }
-                        +saveConfigText
-                    }
-                }
-
-                formEntry {
-                    button {
-                        id = "reset_config__button"
-                        classNameString = "action_button_style"
-                        onClick = {
-                            it.preventDefault()
-                            config.value = createDefaultConfig()
-                            notifySuccess("As configurações foram redefinidas com sucesso. Não se esqueça de salvar.", title = "Configurações redefinidas", useEvent = false, timeout = config.value.notificationConfig.successTimeout + 700.milliseconds)
-                        }
-                        +"Redefinir configurações"
-                    }
-                }
-            }
+            SaveButtons(config, saveConfigText, handleSaveConfig)
         }
     }
 }
@@ -114,9 +74,7 @@ private fun ChildrenBuilder.AnkiOptions(derivedConfig: StateInstance<ExtensionCo
 
     section {
         classNameString = "form_category__section"
-        h1 {
-            +"Conexão com o Anki"
-        }
+        h1 { +"Conexão com o Anki" }
 
         p {
             classNameString = "form_category_desc__p"
@@ -299,6 +257,56 @@ private fun ChildrenBuilder.NotificationOptions(derivedConfig: StateInstance<Ext
                         )
                     })
                 }
+            }
+        }
+    }
+}
+
+private fun ChildrenBuilder.SaveButtons(
+    derivedConfig: StateInstance<ExtensionConfig>,
+    derivedSaveConfigText: StateInstance<String>,
+    saveConfig: suspend () -> Unit
+) {
+    var config by derivedConfig
+    var saveConfigText by derivedSaveConfigText
+
+    div {
+        classNameString = "action_buttons__div"
+
+        formEntry {
+            button {
+                id = "save_config__button"
+                classNameString = "action_button_style"
+                onClick = {
+                    it.preventDefault()
+                    mainScope.launch {
+                        runCatching { saveConfig() }
+                            .onSuccess {
+                                saveConfigText = "Sucesso ✔"
+                                delay(config.notificationConfig.successTimeout)
+                                saveConfigText = SAVE_CONFIG_DEFAULT_TEXT
+                            }.onFailure {
+                                it.nonFatalOrThrow()
+                                saveConfigText = "Erro ao salvar configurações ✖"
+                                delay(2.seconds)
+                                saveConfigText = SAVE_CONFIG_DEFAULT_TEXT
+                            }.getOrThrow()
+                    }
+                }
+                +saveConfigText
+            }
+        }
+
+        formEntry {
+            button {
+                id = "reset_config__button"
+                classNameString = "action_button_style"
+                onClick = {
+                    it.preventDefault()
+                    config = createDefaultConfig()
+                    notifySuccess("As configurações foram redefinidas com sucesso. Não se esqueça de salvar.", title = "Configurações redefinidas", useEvent = false, timeout = config.notificationConfig.successTimeout + 700.milliseconds)
+                }
+                +"Redefinir configurações"
             }
         }
     }
