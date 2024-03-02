@@ -37,7 +37,7 @@ fun findAddAllSentencesInjectPoints(sentences: Collection<HTMLElement>): Collect
     while (deque.isNotEmpty()) {
         val sentence = deque.removeFirst()
         val sentencesInSection = sentence.getSectionSentences()
-        console.info("Sentences in section:", sentencesInSection.toTypedArray())
+        console.debug("Sentences in section:", sentencesInSection.toTypedArray())
         deque.removeAll(sentencesInSection)
 
         addAllSentencesInjectPoints += AddAllSentencesInjectPoints(

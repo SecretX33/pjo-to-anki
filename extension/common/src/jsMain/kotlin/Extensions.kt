@@ -1,3 +1,4 @@
+
 import chrome.runtime.ExtensionMessageEvent
 import chrome.runtime.MessageSender
 import kotlinx.coroutines.CancellableContinuation
@@ -7,6 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.encodeToString
@@ -19,6 +21,11 @@ val scope by lazy {
         .plus(Dispatchers.Default)
         .plus(CoroutineName("PJO to Anki default coroutine scope"))
     CoroutineScope(context)
+}
+
+val mainScope by lazy {
+    scope.plus(Dispatchers.Main)
+        .plus(CoroutineName("PJO to Anki default coroutine scope"))
 }
 
 val Element.tagNameLowercase: String get() = tagName.lowercase()
@@ -46,8 +53,13 @@ inline fun <reified T> decodeJson(eventJson: String): T = try {
     throw e
 }
 
-inline fun <reified T : Any> T.toNormalJsObject(): Any = try {
-    JSON.parse(Json.encodeToString<T>(this))
+inline fun <reified T : Any> T.toNormalJsObject(
+    encodeDefault: Boolean = true,
+): Any = try {
+    val kotlinJson = Json {
+        this.encodeDefaults = encodeDefault
+    }
+    JSON.parse(kotlinJson.encodeToString<T>(this))
 } catch (e: Throwable) {
     e.nonFatalOrThrow()
     this
@@ -55,12 +67,13 @@ inline fun <reified T : Any> T.toNormalJsObject(): Any = try {
 
 inline fun ExtensionMessageEvent.addMessageListener(crossinline callback: suspend (message: String, sender: MessageSender) -> Unit) {
     addListener { request, sender, sendResponse ->
-        console.info("Received message:", request)
+        console.debug("Received message:", request)
         if (request !is String) {
-            console.warn("Received message not encoded, silently ignoring. Message:", request)
+            console.warn("Received message not encoded, silently ignoring. Type: '${request::class.simpleName}'. Message:", request)
+            return@addListener
         }
         scope.launch {
-            callback(request as String, sender)
+            callback(request, sender)
         }
         sendResponse(Unit)
     }
@@ -75,7 +88,7 @@ fun NonFatal(t: Throwable): Boolean =
 fun Throwable.nonFatalOrThrow(): Throwable =
     if (NonFatal(this)) this else throw this
 
-suspend inline fun <T> suspendCancellableCoroutineWithTimeout(
+suspend inline fun <T> suspendCancellableCoroutine(
     timeout: Duration,
     crossinline block: (CancellableContinuation<T>) -> Unit,
 ): T = withTimeout(timeout) {

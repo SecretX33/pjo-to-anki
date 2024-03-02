@@ -1,32 +1,27 @@
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.jetbrains.compose.web.attributes.AutoComplete
-import org.jetbrains.compose.web.attributes.autoComplete
-import org.jetbrains.compose.web.attributes.name
-import org.jetbrains.compose.web.dom.A
-import org.jetbrains.compose.web.dom.Br
-import org.jetbrains.compose.web.dom.Button
-import org.jetbrains.compose.web.dom.CheckboxInput
-import org.jetbrains.compose.web.dom.Div
-import org.jetbrains.compose.web.dom.Form
-import org.jetbrains.compose.web.dom.H1
-import org.jetbrains.compose.web.dom.H3
-import org.jetbrains.compose.web.dom.Label
-import org.jetbrains.compose.web.dom.NumberInput
-import org.jetbrains.compose.web.dom.P
-import org.jetbrains.compose.web.dom.Section
-import org.jetbrains.compose.web.dom.Text
-import org.jetbrains.compose.web.dom.TextInput
-import org.jetbrains.compose.web.renderComposable
-import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
+import react.ChildrenBuilder
+import react.FC
+import react.StateInstance
+import react.create
+import react.dom.client.createRoot
+import react.dom.html.AutoComplete
+import react.dom.html.HTMLAttributes
+import react.dom.html.ReactHTML.a
+import react.dom.html.ReactHTML.br
+import react.dom.html.ReactHTML.button
+import react.dom.html.ReactHTML.div
+import react.dom.html.ReactHTML.form
+import react.dom.html.ReactHTML.h1
+import react.dom.html.ReactHTML.h3
+import react.dom.html.ReactHTML.input
+import react.dom.html.ReactHTML.label
+import react.dom.html.ReactHTML.p
+import react.dom.html.ReactHTML.section
+import react.useState
+import web.html.HTMLParagraphElement
+import web.html.InputType
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
@@ -34,27 +29,26 @@ const val ANKI_CONNECT_ADDON_LINK = "https://ankiweb.net/shared/info/2055492159"
 const val SAVE_CONFIG_DEFAULT_TEXT = "Salvar configurações"
 
 fun main() {
-    renderComposable("root") {
-        Options()
-    }
+    val container = web.dom.document.getElementById("root") ?: throw IllegalStateException("Couldn't find root div!")
+    createRoot(container).render(Options.create())
 }
 
-@Composable
-private fun Options() {
-    val _config by produceState(null as ExtensionConfig?) { value = globalConfig() }
+@Suppress("UNCHECKED_CAST", "UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
+private val Options = FC {
+    val config = useSuspendState { globalConfig() }
+    var saveConfigText by useState(SAVE_CONFIG_DEFAULT_TEXT)
 
-    if (_config == null) {
-        P { Text("Carregando...") }
-        return
+    if (config.value == null) {
+        p { +"Carregando..." }
+        return@FC
     }
-
-    val config = remember { mutableStateOf(_config!!) }
+    config as StateInstance<ExtensionConfig>
 
     val handleSaveConfig = suspend {
         try {
-            config.value = config.value.trimmed()
-            setGlobalConfig(config.value)
-            console.info("Saved config:", config.value.toNormalJsObject())
+            val trimmedConfig = config.value.trimmed().also { config.value = it }
+            setGlobalConfig(trimmedConfig)
+            console.info("Saved config:", trimmedConfig.toNormalJsObject())
             notifySuccess("As configurações foram salvas com sucesso.", title = "Configurações salvas", useEvent = false)
         } catch (e: Throwable) {
             console.error("Could not save config", config.value.toNormalJsObject(), e.nonFatalOrThrow())
@@ -62,21 +56,24 @@ private fun Options() {
         }
     }
 
-    Form {
-        Div({ classes("form__div") }) {
+    form {
+        div {
+            classNameString = "form__div"
+
             AnkiOptions(config)
 
             NotificationOptions(config)
 
-            Div({ classes("action_buttons__div") }) {
-                var saveConfigText by remember { mutableStateOf(SAVE_CONFIG_DEFAULT_TEXT) }
+            div {
+                classNameString = "action_buttons__div"
+
                 formEntry {
-                    Button({
-                        id("save_config__button")
-                        classes("action_button_style")
-                        onClick {
+                    button {
+                        id = "save_config__button"
+                        classNameString = "action_button_style"
+                        onClick = {
                             it.preventDefault()
-                            scope.launch {
+                            mainScope.launch {
                                 runCatching { handleSaveConfig() }
                                     .onSuccess {
                                         saveConfigText = "Sucesso ✔"
@@ -89,22 +86,20 @@ private fun Options() {
                                     }.getOrThrow()
                             }
                         }
-                    }) {
-                        Text(saveConfigText)
+                        +saveConfigText
                     }
                 }
 
                 formEntry {
-                    Button({
-                        id("reset_config__button")
-                        classes("action_button_style")
-                        onClick {
+                    button {
+                        id = "reset_config__button"
+                        classNameString = "action_button_style"
+                        onClick = {
                             it.preventDefault()
                             config.value = createDefaultConfig()
                             notifySuccess("As configurações foram redefinidas com sucesso. Não se esqueça de salvar.", title = "Configurações redefinidas", useEvent = false, timeout = config.value.notificationConfig.successTimeout + 700.milliseconds)
                         }
-                    }) {
-                        Text("Redefinir configurações")
+                        +"Redefinir configurações"
                     }
                 }
             }
@@ -112,45 +107,53 @@ private fun Options() {
     }
 }
 
-@Composable
-private fun AnkiOptions(derivedConfig: MutableState<ExtensionConfig>) {
+private fun ChildrenBuilder.AnkiOptions(derivedConfig: StateInstance<ExtensionConfig>) {
     var config by derivedConfig
-    var ankiConnect by DerivedState({ config.ankiConnect }, { config = config.copy(ankiConnect = it) })
-    var deckConfig by DerivedState({ ankiConnect.deckConfig }, { ankiConnect = ankiConnect.copy(deckConfig = it) })
+    var ankiConnect by derivedState({ config.ankiConnect }, { config = config.copy(ankiConnect = it) })
+    var deckConfig by derivedState({ ankiConnect.deckConfig }, { ankiConnect = ankiConnect.copy(deckConfig = it) })
 
-    Section({ classes("form_category__section") }) {
-        H1 { Text("Conexão com o Anki") }
-
-        P({ classes("form_category_desc__p") }) {
-            Text("Ajuste a integração com o Anki, desde a URL até informações do seu deck.")
+    section {
+        classNameString = "form_category__section"
+        h1 {
+            +"Conexão com o Anki"
         }
 
-        Section({ classes("form_category_items__section") }) {
-            Section {
-                H3 { Text("Gerais") }
+        p {
+            classNameString = "form_category_desc__p"
+            +"Ajuste a integração com o Anki, desde a URL até informações do seu deck."
+        }
 
-                Div({ classes("form_inner_category__div") }) {
-                    formEntry({
-                        Label {
-                            Text("URL do Anki Connect (")
-                            A(ANKI_CONNECT_ADDON_LINK) { Text("link") }
-                            Text(")")
+        section {
+            classNameString = "form_category_items__section"
+            section {
+                h3 { +"Gerais" }
+
+                div {
+                    classNameString = "form_inner_category__div"
+                    formEntry {
+                        textLabel("URL do Anki Connect (")
+                        a {
+                            href = ANKI_CONNECT_ADDON_LINK
+                            +"link"
                         }
-                    }, {
+                        +" )"
+                    }
+                    formEntry {
                         textInput(
                             id = "ankiUrl",
                             getValue = { ankiConnect.url },
                             setValue = { ankiConnect = ankiConnect.copy(url = it) },
                             autoComplete = AutoComplete.url,
                         )
-                    })
+                    }
                 }
             }
 
-            Section {
-                H3 { Text("Deck") }
+            section {
+                h3 { +"Deck" }
 
-                Div({ classes("form_inner_category__div") }) {
+                div {
+                    classNameString = "form_inner_category__div"
 
                     formEntry({ textLabel("Nome do deck", forId = "deckName") }, {
                         textInput(
@@ -184,7 +187,7 @@ private fun AnkiOptions(derivedConfig: MutableState<ExtensionConfig>) {
                         )
                     })
 
-                    formEntry({ textLabel("Nome do campo de audio", forId = "audioFieldName") }, {
+                    formEntry({ textLabel("Nome do campo de áudio", forId = "audioFieldName") }, {
                         textInput(
                             id = "audioFieldName",
                             getValue = { deckConfig.audioFieldName.orEmpty() },
@@ -206,26 +209,31 @@ private fun AnkiOptions(derivedConfig: MutableState<ExtensionConfig>) {
     }
 }
 
-@Composable
-private fun NotificationOptions(derivedConfig: MutableState<ExtensionConfig>) {
+private fun ChildrenBuilder.NotificationOptions(derivedConfig: StateInstance<ExtensionConfig>) {
     var config by derivedConfig
-    var notificationConfig by DerivedState({ config.notificationConfig }, { config = config.copy(notificationConfig = it) })
+    var notificationConfig by derivedState({ config.notificationConfig }, { config = config.copy(notificationConfig = it) })
 
-    Section({ classes("form_category__section") }) {
-        H1 { Text("Notificações") }
+    section {
+        classNameString = "form_category__section"
 
-        P({ classes("form_category_desc__p") }) {
-            Text("Ative ou desative notificações, ajuste o tempo que elas ficam visíveis, etc.")
+        h1 { +"Notificações" }
+
+        p {
+            classNameString = "form_category_desc__p"
+            +"Ative ou desative notificações, ajuste o tempo que elas ficam visíveis, etc."
         }
 
-        Section({ classes("form_category_items__section") }) {
+        section {
+            classNameString = "form_category_items__section"
 
-            Section {
-                H3 { Text("Sucesso") }
+            section {
+                h3 { +"Sucesso" }
 
-                Div({ classes("form_inner_category__div") }) {
+                div {
+                    classNameString = "form_inner_category__div"
+
                     formEntry {
-                        textLabel("Mostrar notifições de sucesso: ", forId = "showOnSuccess")
+                        textLabel("Mostrar notificações de sucesso: ", forId = "showOnSuccess")
                         checkboxInput(
                             id = "showOnSuccess",
                             getValue = { notificationConfig.showOnSuccess },
@@ -243,12 +251,14 @@ private fun NotificationOptions(derivedConfig: MutableState<ExtensionConfig>) {
                 }
             }
 
-            Section {
-                H3 { Text("Aviso") }
+            section {
+                h3 { +"Aviso" }
 
-                Div({ classes("form_inner_category__div") }) {
+                div {
+                    classNameString = "form_inner_category__div"
+
                     formEntry {
-                        textLabel("Mostrar notifições de aviso: ", forId = "showOnWarning")
+                        textLabel("Mostrar notificações de aviso: ", forId = "showOnWarning")
                         checkboxInput(
                             id = "showOnWarning",
                             getValue = { notificationConfig.showOnWarning },
@@ -266,12 +276,14 @@ private fun NotificationOptions(derivedConfig: MutableState<ExtensionConfig>) {
                 }
             }
 
-            Section {
-                H3 { Text("Erro") }
+            section {
+                h3 { +"Erro" }
 
-                Div({ classes("form_inner_category__div") }) {
+                div {
+                    classNameString = "form_inner_category__div"
+
                     formEntry {
-                        textLabel("Mostrar notifições de erro: ", forId = "showOnError")
+                        textLabel("Mostrar notificações de erro: ", forId = "showOnError")
                         checkboxInput(
                             id = "showOnError",
                             getValue = { notificationConfig.showOnError },
@@ -292,32 +304,32 @@ private fun NotificationOptions(derivedConfig: MutableState<ExtensionConfig>) {
     }
 }
 
-@Composable
-private fun formEntry(block: @Composable () -> Unit) {
-    P({ classes("form_entry__p") }) {
+private fun ChildrenBuilder.formEntry(block: HTMLAttributes<HTMLParagraphElement>.() -> Unit) {
+    p {
+        classNameString = "form_entry__p"
         block()
     }
 }
 
-@Composable
-private fun formEntry(
-    buildLabel: @Composable () -> Unit,
-    buildInput: @Composable () -> Unit,
+private fun ChildrenBuilder.formEntry(
+    buildLabel: HTMLAttributes<HTMLParagraphElement>.() -> Unit,
+    buildInput: HTMLAttributes<HTMLParagraphElement>.() -> Unit,
 ) {
     formEntry {
         buildLabel()
-        Br()
+        br
         buildInput()
     }
 }
 
-@Composable
-private fun textLabel(text: String, forId: String? = null) {
-    Label(forId = forId) { Text(text) }
+private fun ChildrenBuilder.textLabel(text: String, forId: String? = null) {
+    label {
+        htmlFor = forId
+        +text
+    }
 }
 
-@Composable
-private fun textInput(
+private fun ChildrenBuilder.textInput(
     id: String,
     getValue: () -> String,
     setValue: (String) -> Unit,
@@ -325,59 +337,46 @@ private fun textInput(
     editable: Boolean = true,
     spellCheck: Boolean = false,
 ) {
-    TextInput(getValue()) {
-        id(id)
-        name(id)
-        spellCheck(spellCheck)
-        autoComplete(autoComplete)
-        contentEditable(editable)
-        onInput { setValue(it.value) }
+    input {
+        this.id = id
+        this.name = id
+        this.spellCheck = spellCheck
+        this.autoComplete = autoComplete
+        contentEditable = editable
+        type = InputType.text
+        value = getValue()
+        onInput = { setValue(it.currentTarget.value) }
     }
 }
 
-@Composable
-private fun numberInput(
+private fun ChildrenBuilder.numberInput(
     id: String,
     getValue: () -> Int,
     setValue: (Int) -> Unit,
     editable: Boolean = true,
 ) {
-    NumberInput(getValue()) {
-        id(id)
-        name(id)
-        spellCheck(false)
-        autoComplete(AutoComplete.off)
-        contentEditable(editable)
-        onInput {
-            setValue(it.value?.toInt() ?: 0)
-        }
+    input {
+        this.id = id
+        name = id
+        spellCheck = spellCheck
+        autoComplete = AutoComplete.off
+        contentEditable = editable
+        type = InputType.number
+        value = getValue()
+        onInput = { setValue(it.currentTarget.value.toIntOrNull() ?: 0) }
     }
 }
 
-@Composable
-private fun checkboxInput(
+private fun ChildrenBuilder.checkboxInput(
     id: String,
     getValue: () -> Boolean,
     setValue: (Boolean) -> Unit,
 ) {
-    CheckboxInput(getValue()) {
-        id(id)
-        name(id)
-        onInput {
-            setValue(it.value)
-        }
+    input {
+        this.id = id
+        name = id
+        type = InputType.checkbox
+        value = getValue().toString()
+        onInput = { setValue(it.currentTarget.value.toBooleanStrict()) }
     }
-}
-
-private class DerivedState<T>(
-    private val getValue: () -> T,
-    private val updateValue: (T) -> Unit,
-) : MutableState<T>, ReadWriteProperty<Any?, T> {
-    override fun getValue(thisRef: Any?, property: KProperty<*>): T = getValue()
-    override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) = updateValue(value)
-    override var value: T
-        get() = getValue()
-        set(value) { updateValue(value) }
-    override fun component1(): T = getValue()
-    override fun component2(): (T) -> Unit = { updateValue(it) }
 }

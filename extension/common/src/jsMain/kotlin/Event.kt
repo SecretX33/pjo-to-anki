@@ -24,8 +24,8 @@ enum class EventType {
 suspend inline fun <reified R> sendEventToBackground(
     event: Event,
     timeout: Duration = 10.seconds,
-): R = suspendCancellableCoroutineWithTimeout(timeout) { continuation ->
-    console.info("Sending event to background", event.toNormalJsObject())
+): R = suspendCancellableCoroutine(timeout = timeout) { continuation ->
+    console.debug("Sending event to background", event.toNormalJsObject())
     try {
         chrome.runtime.sendMessage(encodeJson<Event>(event)) {
             when {
@@ -41,14 +41,14 @@ suspend inline fun <reified R> sendEventToBackground(
 }
 
 suspend inline fun <reified R> sendEventToContentScript(event: Event): R {
-    console.info("Sending event to content script", event.toNormalJsObject())
+    console.debug("Sending event to content script", event.toNormalJsObject())
 
     val activeTabs = getActiveTabs().ifEmpty {
         throw IllegalArgumentException("Get active tabs returned no tab, so there's no way to send event ${event.toNormalJsObject()} to content script")
     }
     val firstTabId = activeTabs[0].id ?: throw IllegalArgumentException("First tab has no assigned ID. Tabs: $activeTabs")
 
-    return suspendCancellableCoroutineWithTimeout(5.seconds) { continuation ->
+    return suspendCancellableCoroutine(timeout = 5.seconds) { continuation ->
         try {
             chrome.tabs.sendMessage(firstTabId, encodeJson<Event>(event)) {
                 when {
@@ -64,7 +64,7 @@ suspend inline fun <reified R> sendEventToContentScript(event: Event): R {
     }
 }
 
-suspend fun getActiveTabs(): Array<Tab> = suspendCancellableCoroutineWithTimeout(5.seconds) { continuation ->
+suspend fun getActiveTabs(): Array<Tab> = suspendCancellableCoroutine(timeout = 5.seconds) { continuation ->
     try {
         val queryInfo = jsObject<QueryInfo>().apply {
             active = true

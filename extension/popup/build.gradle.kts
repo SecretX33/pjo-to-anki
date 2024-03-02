@@ -5,7 +5,6 @@ import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig
 
 plugins {
     kotlin("multiplatform")
-    id("org.jetbrains.compose")
 }
 
 kotlin {
@@ -25,11 +24,9 @@ kotlin {
     }
 
     sourceSets {
-        named("commonMain") {
+        named("jsMain") {
             dependencies {
-                implementation(project(":extension:common"))
-                implementation(compose.html.core)
-                implementation(compose.runtime)
+                implementation(project(":extension:commonInterface"))
             }
         }
     }

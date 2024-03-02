@@ -50,7 +50,7 @@ fun handleAnkiAddNewCardEvent(): EventHandler = { json ->
 
     try {
         val response = doAnkiRequest<Note, Unit>(actionName, params)
-        console.info("Card created on Anki via AnkiConnect. Response:", response)
+        console.debug("Card created on Anki via AnkiConnect. Response:", response)
         notifySuccess("A carta foi criada com sucesso.", title = "Carta adicionada")
     } catch (e: Throwable) {
         val errorMessage = e.nonFatalOrThrow().message ?: e.toString()
@@ -115,7 +115,7 @@ suspend inline fun <reified T, reified R> doAnkiRequest(
     val body = encodeJson<AnkiBodyRequest<T>>(AnkiBodyRequest(action = actionName, version = version, params = param))
     val url = globalConfig().ankiConnect.url
 
-    console.info("Requesting to '$url' with body:", body.toNormalJsObject())
+    console.debug("Requesting to '$url' with body:", body.toNormalJsObject())
 
     try {
         val response = httpClient.post(url) {
@@ -126,7 +126,7 @@ suspend inline fun <reified T, reified R> doAnkiRequest(
         }
 
         val data = JSON.parse<Any>(response.bodyAsText())
-        console.info("Parsed '$url' response", data, "\nClass: ${data::class.simpleName}")
+        console.debug("Parsed '$url' response", data, "\nClass: ${data::class.simpleName}")
         data.asDynamic().error.unsafeCast<String?>()?.let { throw AnkiException(it) }
 
         return when {
