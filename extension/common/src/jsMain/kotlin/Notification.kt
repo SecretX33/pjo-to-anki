@@ -1,6 +1,6 @@
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
+import web.console.console
 import kotlin.time.Duration
 
 @Serializable
@@ -122,8 +122,8 @@ suspend fun showNotification(options: NotificationOptions, extensionConfig: Exte
         return
     }
 
-    scope.launch(Dispatchers.Main) {
-        console.info("Displaying notification:", options.toNormalJsObject())
+    mainScope.launch {
+        console.debug("Displaying notification:", options.toNormalJsObject())
         dispatchNotificationToLibrary(options)
     }
 }

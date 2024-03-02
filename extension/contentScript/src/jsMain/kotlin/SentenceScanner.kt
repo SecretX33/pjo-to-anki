@@ -1,4 +1,5 @@
 import org.w3c.dom.HTMLElement
+import web.console.console
 
 private val SCAN_TITLE_TAGS = setOf("h1", "h2", "h3", "h4", "h5", "h6")
 private val SCAN_IGNORED_TAGS = setOf("p")
@@ -37,7 +38,7 @@ fun findAddAllSentencesInjectPoints(sentences: Collection<HTMLElement>): Collect
     while (deque.isNotEmpty()) {
         val sentence = deque.removeFirst()
         val sentencesInSection = sentence.getSectionSentences()
-        console.info("Sentences in section:", sentencesInSection.toTypedArray())
+        console.debug("Sentences in section:", sentencesInSection.toTypedArray())
         deque.removeAll(sentencesInSection)
 
         addAllSentencesInjectPoints += AddAllSentencesInjectPoints(

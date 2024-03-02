@@ -29,6 +29,8 @@ kotlin {
                 api(kotlin("stdlib-js"))
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
                 api("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.7.3")
+                api(project.dependencies.platform("org.jetbrains.kotlin-wrappers:kotlin-wrappers-bom:1.0.0-pre.706"))
+                api("org.jetbrains.kotlin-wrappers:kotlin-web")
             }
         }
     }

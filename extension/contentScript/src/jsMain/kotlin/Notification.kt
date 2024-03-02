@@ -1,4 +1,5 @@
 import chrome.runtime.MessageSender
+import web.console.console
 
 fun startNotificationEventListener() = chrome.runtime.onMessage.addMessageListener { eventJson, sender ->
     onEventReceived(eventJson, sender)
@@ -17,7 +18,7 @@ private val eventHandlers: EventHandlerMap = mapOf(
 private suspend fun onEventReceived(eventJson: String, sender: MessageSender) {
     val event = decodeJson<Event>(eventJson)
     val handler = eventHandlers[event.type]
-    console.info("Event has been received:", event.toNormalJsObject(), "\nAnd sender is:", sender, "\nAnd handler is:", handler)
+    console.debug("Event has been received:", event.toNormalJsObject(), "\nAnd sender is:", sender, "\nAnd handler is:", handler)
     handler?.let {
         try {
             it(event.content)

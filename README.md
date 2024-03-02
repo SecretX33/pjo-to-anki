@@ -56,7 +56,7 @@ O AnkiConnect é um addon para o Anki que permite que a extensão se comunique c
    3. **Tipo de nota:** O nome do tipo de nota (modelo) de carta a ser usado para criar as cartas. Se você não sabe qual é o seu, abra seu Anki, vá em "Painel", selecione o deck desejado, e verifique o nome do modelo na coluna de **Nota**.
    4. **Nome do campo da frente (do tipo de nota):** O nome do campo da frente da carta no tipo de nota escolhido. Se você não sabe qual é, abra seu Anki, vá em "Painel", selecione o deck desejado, selecione alguma carta, e verifique o que está escrito em cima da frase da frente da carta.
    5. **Nome do campo do verso (do tipo de nota):** O nome do campo do verso da carta no tipo de nota escolhido. Se você não sabe qual é, abra seu Anki, vá em "Painel", selecione o deck desejado, selecione alguma carta, e verifique o que está escrito em cima da frase do verso da carta.
-   6. **Nome do campo de audio:** (opcional) O nome do campo de áudio do seu tipo de nota escolhido, se você quiser adicionar os áudios das frases, ou deixe em branco para não adicionar áudios.
+   6. **Nome do campo de áudio:** (opcional) O nome do campo de áudio do seu tipo de nota escolhido, se você quiser adicionar os áudios das frases, ou deixe em branco para não adicionar áudios.
       1. Note que, por padrão, o modelo de carta do Anki **não vem** com um campo para áudio, sendo necessário que você edite o seu modelo de carta para adicionar esse campo. Se você tiver dificuldades em fazer isso, peça ajuda no Discord do PJO (comunidade), ou entre em contato direto comigo pelo Discord que eu te ajudo.
    7. **Checar por cartas duplicadas em subdecks:** Opção para usuários avançados, não é necessário alterar.
 

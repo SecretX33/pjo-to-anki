@@ -6,11 +6,12 @@ import org.w3c.dom.Element
 import org.w3c.dom.HTMLButtonElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.asList
+import web.console.console
 
 @Suppress("UNCHECKED_CAST")
 fun addCreateAnkiCardFromSentencesButtons() {
     val sentencesDivs = document.querySelectorAll(SENTENCE_DIV_CSS_SELECTOR).asList() as List<HTMLElement>
-    console.info("Found '${sentencesDivs.size}' sentences found on page:", sentencesDivs)
+    console.debug("Found '${sentencesDivs.size}' sentences found on page:", sentencesDivs)
 
     injectAddSentenceButtons(sentencesDivs)
     injectAddAllSentencesButtons(sentencesDivs)
@@ -65,7 +66,7 @@ private fun injectAddAllSentencesButtons(sentencesDivs: List<HTMLElement>) {
         console.warn("No inject points found, skipping 'Add All Sentences' button for this page...")
         return
     }
-    console.info("Found ${injectPoints.size} inject points for 'Add All Sentences' buttons:", injectPoints.toTypedArray())
+    console.debug("Found ${injectPoints.size} inject points for 'Add All Sentences' buttons:", injectPoints.toTypedArray())
 
     injectPoints.forEachIndexed { index, injectPoint ->
         val anchor = injectPoint.anchor
@@ -95,7 +96,7 @@ private fun injectAddAllSentencesButtons(sentencesDivs: List<HTMLElement>) {
             appendChild(addAllAnkiCardsButton)
         }
 
-        console.info("Successfully injected 'Add All Sentences' button (${index + 1}/${injectPoints.size})")
+        console.debug("Successfully injected 'Add All Sentences' button (${index + 1}/${injectPoints.size})")
     }
 }
 
