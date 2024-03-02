@@ -95,3 +95,7 @@ suspend inline fun <T> suspendCancellableCoroutine(
 ): T = withTimeout(timeout) {
     suspendCancellableCoroutine(block)
 }
+
+val SPACES_REGEX = "\\s+".toRegex()
+
+fun String.trimAndNormalizeSpaces(): String = replace(SPACES_REGEX, " ").trim()

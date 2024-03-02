@@ -11,14 +11,15 @@ data class ExtensionConfig(
     fun trimmed(): ExtensionConfig = copy(
         ankiConnect = ankiConnect.run {
             copy(
-                url = url.trim(),
+                url = url.replace(SPACES_REGEX, ""),
                 deckConfig = deckConfig.run {
                     copy(
-                        name = name.trim(),
-                        modelName = modelName.trim(),
-                        frontFieldName = frontFieldName.trim(),
-                        backFieldName = backFieldName.trim(),
-                        audioFieldName = audioFieldName?.trim()?.takeIf { it.isNotEmpty() },
+                        name = name.trimAndNormalizeSpaces(),
+                        modelName = modelName.trimAndNormalizeSpaces(),
+                        frontFieldName = frontFieldName.trimAndNormalizeSpaces(),
+                        backFieldName = backFieldName.trimAndNormalizeSpaces(),
+                        audioFieldName = audioFieldName?.trimAndNormalizeSpaces()?.takeIf { it.isNotEmpty() },
+                        tags = tags.map { it.trimAndNormalizeSpaces() }.filterTo(mutableSetOf()) { it.isNotEmpty() },
                     )
                 }
             )
@@ -39,6 +40,7 @@ data class DeckConfig(
     val frontFieldName: String,
     val backFieldName: String,
     val audioFieldName: String? = null,
+    val tags: Set<String> = emptySet(),
     val checkDuplicatedsInSubdecks: Boolean,
 )
 
