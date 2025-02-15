@@ -1,36 +1,45 @@
-## Preparing the environment
+# 🛠️ Development Commands
 
-### Java
+## 📋 Prerequisites
 
-Running Gradle might require Java 17 installed. Please install [Java 17](https://adoptium.net/temurin/releases/?version=17) if an error arises when executing any of the provided Gradle commands.
+### Java Requirements
 
-### Environment variables
+This project requires Java 17 to run Gradle commands. If you haven't installed it yet:
+1. Download [Temurin Java 17](https://adoptium.net/temurin/releases/?version=17)
+2. Install it following your OS instructions
+3. Verify installation with `java -version`
 
-This project makes use of some environment variables in order to control some things. The variables used are the following:
+### Environment Variables
 
-- `TARGET_BROWSER`: required, valid values are `firefox`, `chrome`.
-    - Change this to change which browser to build to.
-- `IS_DEVELOPMENT`: optional, valid values are `true`, or `false` (default: `false`).
+In order to build this project, you need to set up all required environment variables. The following variables are required:
 
-## Development
+| Variable         | Required | Values              | Default | Description           |
+|------------------|----------|---------------------|---------|-----------------------|
+| `TARGET_BROWSER` | Yes      | `firefox`, `chrome` | -       | Browser to build for  |
+| `IS_DEVELOPMENT` | No       | `true`, `false`     | false   | Development mode flag |
 
-### Build only extension files (for manual loading on browser)
+## 🚀 Development
+
+### Build Extension Files
+For manual loading in browser:
 ```bash
 ./gradlew extension:buildExtension
 ```
 
-### Little tip
-Be aware that there is still some funkiness with Gradle and Kotlin/JS, but most of these issues are fixed by running Gradle `clean` command.
+### Clean Build
+Fix Gradle/Kotlin-JS issues with:
 ```bash
 ./gradlew clean
 ```
 
-## Build
+## 📦 Production Build
 
-### Compile
-
-To compile the extension to an extension package (`.zip` for Chrome, `.xpi` for Firefox), run the following command. The final result will be in `extension/build/distributions/{browserName}.{browserExtension}`.
-
+### Package Extension
+Creates a browser-specific package (`.zip` for Chrome, `.xpi` for Firefox):
 ```bash
 ./gradlew clean extension:packageExtension
 ```
+
+Output location: `extension/build/distributions/{browserName}.{browserExtension}`
+
+> 💡 **Tip**: If you encounter any issues, try running `clean` before other commands
